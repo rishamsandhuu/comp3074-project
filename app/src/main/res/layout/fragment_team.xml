@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <!-- Team list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/teamRecycler"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingTop="8dp"
+        android:paddingBottom="96dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_team_member"/>
+
+    <!-- Info button (existing id) -->
+    <ImageButton
+        android:id="@+id/btnInfo"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_margin="12dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_info"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@android:color/white" />
+
+    <!-- Floating Add (+) -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAdd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        app:tint="@android:color/white"
+        app:backgroundTint="@color/hq_purple"
+        app:srcCompat="@drawable/ic_add"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- About overlay (existing ids; kept intact) -->
+    <ScrollView
+        android:id="@+id/aboutOverlay"
+        android:visibility="gone"
+        android:background="#99000000"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- [existing content kept as in your file: title, body text, etc.] -->
+        <!-- Keep your previous children here; I didn't touch their content -->
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home"
+        app:iconTint="@color/home_selector"
+        app:titleTextColor="@color/home_selector" />
+
+    <item
+        android:id="@+id/mapFragment"
+        android:icon="@drawable/ic_map"
+        android:title="@string/map"
+        app:iconTint="@color/magenta_selector"
+        app:titleTextColor="@color/magenta_selector" />
+
+    <item
+        android:id="@+id/teamFragment"
+        android:icon="@drawable/ic_team"
+        android:title="@string/team"
+        app:iconTint="@color/magenta_selector"
+        app:titleTextColor="@color/magenta_selector" />
+</menu>
