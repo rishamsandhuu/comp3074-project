@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/hq_nav_bg"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- ▓▓ Header ▓▓ -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/hq_purple"
+            android:padding="16dp"
+            android:elevation="4dp">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/details_old_mill"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:fontFamily="@font/press_start_2p" />
+
+            <TextView
+                android:id="@+id/address"
+                android:layout_below="@id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/address_old_mill"
+                android:textColor="#E0E0E0"
+                android:textSize="12sp"
+                android:layout_marginTop="4dp" />
+
+            <ImageButton
+                android:id="@+id/menu_button"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_alignParentEnd="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_more"
+                android:padding="12dp"
+                android:contentDescription="@string/more_options"
+                app:tint="@android:color/white" />
+        </RelativeLayout>
+
+        <!-- ▓▓ Task Description ▓▓ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#222222"
+            android:padding="20dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="16dp"
+            android:elevation="2dp"
+            android:clipToOutline="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/task_find_year"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:lineSpacingExtra="4dp"
+                android:fontFamily="@font/press_start_2p" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/tag_history"
+                    android:textColor="@color/hq_teal"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/press_start_2p" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/tag_architecture"
+                    android:textColor="@color/hq_teal"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/press_start_2p" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tag_trivia"
+                    android:textColor="@color/hq_teal"
+                    android:textSize="13sp"
+                    android:fontFamily="@font/press_start_2p" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- ▓▓ Complete Task Button ▓▓ -->
+        <Button
+            android:id="@+id/complete_task"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/complete_task"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:fontFamily="@font/press_start_2p"
+            android:textSize="14sp"
+            android:backgroundTint="@color/hq_pink"
+            android:paddingVertical="18dp"
+            android:layout_marginVertical="12dp"
+            android:elevation="6dp"
+            android:contentDescription="@string/mark_task_complete" />
+
+        <!-- ▓▓ Action Buttons ▓▓ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+
+            <Button
+                android:id="@+id/btnDirections"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/directions"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/hq_teal"
+                android:layout_margin="4dp"
+                android:contentDescription="@string/open_directions" />
+
+            <Button
+                android:id="@+id/btnMap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/map"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/hq_pink"
+                android:layout_margin="4dp"
+                android:contentDescription="@string/open_map" />
+
+            <Button
+                android:id="@+id/btnShare"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/share"
+                android:textColor="@android:color/white"
+                android:backgroundTint="@color/hq_purple"
+                android:layout_margin="4dp"
+                android:contentDescription="@string/share_task_details" />
+        </LinearLayout>
+
+        <!-- ▓▓ Rating Section ▓▓ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="#222222"
+            android:clipToOutline="true"
+            android:elevation="2dp"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/press_start_2p"
+                android:text="@string/rate_your_experience"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:baselineAligned="false"
+                android:contentDescription="@string/rate_from_one_to_five_stars"
+                android:numStars="5"
+                android:progressTint="@color/hq_teal"
+                android:rating="5"
+                android:stepSize="1" />
+
+            <Button
+                android:id="@+id/btnSubmitRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:backgroundTint="@color/hq_purple"
+                android:contentDescription="@string/submit_your_rating"
+                android:fontFamily="@font/press_start_2p"
+                android:text="@string/submit"
+                android:textColor="@android:color/white" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
