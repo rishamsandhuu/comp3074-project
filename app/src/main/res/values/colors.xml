@@ -7,5 +7,6 @@
     <color name="hq_nav_text_unselected">#9E9E9E</color> <!-- optional -->
     <color name="hq_text_dim">#B0B0B0</color>   <!-- Secondary text (hours, subtitles) -->
     <color name="card_bg_dark">#101010</color>  <!-- Card backgrounds (POI items, panels) -->
+    <color name="hq_avatar_bg">#E8DDFB</color>
 
 </resources>

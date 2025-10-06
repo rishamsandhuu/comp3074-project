@@ -1,69 +1,128 @@
-@file:Suppress("DEPRECATION")
-
 package com.example.huntquest
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.view.animation.AlphaAnimation
 import androidx.activity.addCallback
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class TeamFragment : Fragment() {
+class TeamFragment : Fragment(R.layout.fragment_team) {
 
-    private lateinit var about: View
+    // Data + UI
+    private lateinit var repo: TeamPrefsRepository
+    private lateinit var recycler: RecyclerView
+    private lateinit var adapter: TeamMemberAdapter
+
+    // About overlay bits
     private lateinit var btnInfo: View
+    private lateinit var aboutOverlay: View
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val v = inflater.inflate(R.layout.fragment_team, container, false)
-        about = v.findViewById(R.id.aboutOverlay)
-        btnInfo = v.findViewById(R.id.btnInfo)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        btnInfo.setOnClickListener { toggleAbout() }
+        repo = TeamPrefsRepository(requireContext().applicationContext)
 
-        // If the overlay is visible, back button hides it instead of leaving the screen
+        // --- RecyclerView setup ---
+        recycler = view.findViewById(R.id.teamRecycler)
+        recycler.layoutManager = LinearLayoutManager(requireContext())
+
+        adapter = TeamMemberAdapter(
+            onCall = { member -> openDialer(member.phone) },
+            onEmail = { member -> composeEmail(member.email, member.name) },
+            onEdit = { member ->
+                findNavController().navigate(
+                    R.id.editMemberFragment,
+                    bundleOf("memberId" to member.id)
+                )
+            },
+            onRemove = { member ->
+                val list = repo.load().toMutableList()
+                if (list.removeAll { it.id == member.id }) {
+                    repo.save(list)
+                    adapter.replaceAll(list)
+                }
+            }
+        )
+        recycler.adapter = adapter
+        adapter.replaceAll(repo.load())
+
+        // --- FAB: Add Member ---
+        view.findViewById<FloatingActionButton>(R.id.fabAdd).setOnClickListener {
+            findNavController().navigate(R.id.addMemberFragment)
+        }
+
+        // --- About overlay wiring (uses ids in fragment_team.xml) ---
+        btnInfo = view.findViewById(R.id.btnInfo)
+        aboutOverlay = view.findViewById(R.id.aboutOverlay)
+
+        btnInfo.setOnClickListener { aboutOverlay.visibility = View.VISIBLE }
+        aboutOverlay.setOnClickListener { aboutOverlay.visibility = View.GONE }
+
+        // Back press: close overlay first
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
-            if (about.isVisible) {
-                hideAbout()
+            if (aboutOverlay.visibility == View.VISIBLE) {
+                aboutOverlay.visibility = View.GONE
             } else {
-                // Let Activity handle normal back (go Home)
                 isEnabled = false
                 requireActivity().onBackPressed()
             }
         }
-
-        return v
     }
 
-    private fun toggleAbout() {
-        if (about.isVisible) hideAbout() else showAbout()
+    override fun onResume() {
+        super.onResume()
+        // Refresh after add/edit
+        adapter.replaceAll(repo.load())
     }
 
-    private fun showAbout() {
-        about.visibility = View.VISIBLE
-        fade(about, inAnim = true)
-    }
+    // --- Helpers ---
 
-    private fun hideAbout() {
-        fade(about, inAnim = false) {
-            about.visibility = View.GONE
+    private fun openDialer(raw: String?) {
+        val phone = (raw ?: "").filterNot { it.isWhitespace() }
+        if (phone.isNotEmpty()) {
+            val intent = Intent(Intent.ACTION_DIAL).apply {
+                data = Uri.parse("tel:$phone")
+            }
+            startActivity(intent)
         }
     }
 
-    private fun fade(view: View, inAnim: Boolean, end: (() -> Unit)? = null) {
-        val anim = if (inAnim) AlphaAnimation(0f, 1f) else AlphaAnimation(1f, 0f)
-        anim.duration = 180
-        anim.fillAfter = true
-        anim.setAnimationListener(object : android.view.animation.Animation.AnimationListener {
-            override fun onAnimationStart(animation: android.view.animation.Animation) {}
-            override fun onAnimationRepeat(animation: android.view.animation.Animation) {}
-            override fun onAnimationEnd(animation: android.view.animation.Animation) { end?.invoke() }
-        })
-        view.startAnimation(anim)
+    private fun composeEmail(email: String?, name: String?) {
+        val addr = (email ?: "").trim()
+        if (addr.isEmpty()) return
+
+        val subject = "Hello ${name ?: ""}".trim()
+        val body = "Hi ${name ?: ""},\n\n".trim()
+
+        // Put recipient into the path so Gmail fills "To"
+        val uri = Uri.parse("mailto:").buildUpon()
+            .appendEncodedPath(addr)
+            .appendQueryParameter("subject", subject)
+            .appendQueryParameter("body", body)
+            .build()
+
+        val sendTo = Intent(Intent.ACTION_SENDTO, uri)
+        val pm = requireContext().packageManager
+        val gmail = Intent(sendTo).apply { `package` = "com.google.android.gm" }
+
+        when {
+            gmail.resolveActivity(pm) != null -> startActivity(gmail)
+            sendTo.resolveActivity(pm) != null -> startActivity(sendTo)
+            else -> {
+                val fallback = Intent(Intent.ACTION_SEND).apply {
+                    type = "message/rfc822"
+                    putExtra(Intent.EXTRA_EMAIL, arrayOf(addr))
+                    putExtra(Intent.EXTRA_SUBJECT, subject)
+                    putExtra(Intent.EXTRA_TEXT, body)
+                }
+                startActivity(Intent.createChooser(fallback, "Send email"))
+            }
+        }
     }
 }

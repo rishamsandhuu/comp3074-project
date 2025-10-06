@@ -38,4 +38,19 @@
         android:label="fragment_directions"
         tools:layout="@layout/fragment_directions" />
 
+    <fragment
+        android:id="@+id/addMemberFragment"
+        android:name="com.example.huntquest.AddMemberFragment"
+        android:label="Add Member"
+        tools:layout="@layout/fragment_add_member" />
+
+    <fragment
+        android:id="@+id/editMemberFragment"
+        android:name="com.example.huntquest.EditMemberFragment"
+        android:label="Edit members"
+        tools:layout="@layout/fragment_edit_member">
+        <argument
+            android:name="memberId"
+            app:argType="string" />
+    </fragment>
 </navigation>
