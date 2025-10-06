@@ -1,0 +1,81 @@
+<resources>
+    <string name="app_name">Hunt Quest</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Home</string>
+    <string name="map">Map</string>
+    <string name="team">Team</string>
+    <string name="home_">Home</string>
+    <string name="home__">Home</string>
+    <string name="dhyan">Dhyan</string>
+    <string name="giaaaaaaaa">Giaaaaaaaa</string>
+    <string name="old_mill">Old Mill</string>
+    <string name="directions">DIRECTIONS</string>
+    <string name="full_screen_view">FULL SCREEN VIEW</string>
+    <string name="home0">Home</string>
+    <string name="course_comp_3074_ngroup_group_20_n_nteam_members_n_gia_nagpal_101508691_n_nirja_arun_dabhi_101509539_n_danuja_shankar_101510577_n_rishamanoor_kaur_101508552">Course: COMP–3074 \nGroup: Group 20\n \nTeam Members: \n• Gia Nagpal – 101508691 \n• Nirja Arun Dabhi – 101509539 \n• Danuja Shankar – 101510577 \n• Rishamanoor Kaur – 101508552</string>
+    <string name="team_screen_content">Team screen content</string>
+    <string name="about">About</string>
+    <string name="about_">About</string>
+    <string name="hunt_quest">Hunt Quest</string>
+    <string name="directions_">Directions</string>
+    <string name="driving">Driving</string>
+    <string name="walking">Walking</string>
+    <string name="eta_12_min_4_8_km">ETA: 12 min • 4.8 km</string>
+    <string name="start">Start</string>
+    <string name="open_in_google_maps">Open in Google Maps</string>
+    <string name="driving_">Driving</string>
+    <string name="walking_">Walking</string>
+    <string name="eta_12_min">ETA: 12 min</string>
+    <string name="_4_8_km">4.8 km</string>
+    <string name="start_">Start</string>
+    <string name="open_directions">Open directions</string>
+    <string name="details_old_mill">Details: Old Mill</string>
+    <string name="_123_king_street_w_toronto_on_m5h1a1">123 King Street W, Toronto, ON M5H1A1</string>
+    <string name="more_options">More options</string>
+    <string name="task_nfind_the_year_this_building_was_constructed_and_note_it_down_nbonus_snap_a_photo_of_the_hidden_plaque">Task:\nFind the year this building was constructed and note it down.\nBonus: snap a photo of the hidden plaque!</string>
+    <string name="architecture">#architecture</string>
+    <string name="submit">SUBMIT</string>
+    <string name="submit_your_rating">Submit your rating</string>
+    <string name="rate_from_one_to_five_stars">Rate from one to five stars</string>
+    <string name="rate_your_experience">Rate your experience</string>
+    <string name="hunt_quest_">Hunt Quest</string>
+    <string name="search">Search</string>
+    <string name="cd_add_poi">Add point of interest</string>
+    <string name="remove">Remove</string>
+    <string name="edit">Edit</string>
+    <string name="open_until_6_00_pm">Open until 6:00 pm</string>
+    <string name="_2_1_km">2.1 km</string>
+    <string name="place_name">Place name</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="rating">Rating</string>
+    <string name="poi_details">POI details</string>
+    <string name="name">Name</string>
+    <string name="address">Address</string>
+    <string name="task">Task</string>
+    <string name="tags">Tags</string>
+
+    <!-- ===== Additional strings for Activity Details screen ===== -->
+
+    <string name="back">Back</string>
+    <string name="address_old_mill">123 King Street W, Toronto, ON M5H1A1</string>
+
+    <string name="task_find_year">
+        Find the year this building was constructed and note it down. Bonus: snap a photo of the hidden plaque.
+    </string>
+
+    <string name="tag_history">#history</string>
+    <string name="tag_architecture">#architecture</string>
+    <string name="tag_trivia">#trivia</string>
+
+    <string name="complete_task">COMPLETE TASK</string>
+    <string name="mark_task_complete">Mark task as complete</string>
+
+    <string name="open_map">Open map</string>
+
+    <string name="share">Share</string>
+    <string name="share_task_details">Share task details</string>
+
+</resources>
+
