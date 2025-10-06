@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="screen_h_margin">16dp</dimen>
+    <dimen name="map_card_top_margin">12dp</dimen>
+    <dimen name="map_card_bottom_margin">12dp</dimen>
+    <dimen name="map_card_radius">16dp</dimen>
+
+    <dimen name="bottom_buttons_margin">20dp</dimen>
+    <dimen name="bottom_button_gap">10dp</dimen>
+    <dimen name="bottom_button_height">48dp</dimen>
+</resources>
