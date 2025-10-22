@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.huntquest.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_teamFragment"
+            app:destination="@id/teamFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_aboutFragment"
+            app:destination="@id/aboutFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_editPoiFragment"
+            app:destination="@id/editPoiFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPoiFragment"
+        android:name="com.example.huntquest.EditPoiFragment"
+        android:label="Edit POI"
+        tools:layout="@layout/fragment_edit_poi">
+        <argument
+            android:name="poiId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/addPoiFragment"
+        android:name="com.example.huntquest.AddPoiFragment"
+        android:label="fragment_add_poi"
+        tools:layout="@layout/fragment_add_poi" />
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.huntquest.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" />
+    <fragment
+        android:id="@+id/teamFragment"
+        android:name="com.example.huntquest.TeamFragment"
+        android:label="fragment_team"
+        tools:layout="@layout/fragment_team" />
+    <fragment
+        android:id="@+id/directionsFragment"
+        android:name="com.example.huntquest.DirectionsFragment"
+        android:label="fragment_directions"
+        tools:layout="@layout/fragment_directions" />
+
+    <fragment
+        android:id="@+id/addMemberFragment"
+        android:name="com.example.huntquest.AddMemberFragment"
+        android:label="Add Member"
+        tools:layout="@layout/fragment_add_member" />
+
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.example.huntquest.AboutFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_about" />
+
+    <fragment
+        android:id="@+id/editMemberFragment"
+        android:name="com.example.huntquest.EditMemberFragment"
+        android:label="Edit members"
+        tools:layout="@layout/fragment_edit_member">
+        <argument
+            android:name="memberId"
+            app:argType="string" />
+    </fragment>
+
+</navigation>
