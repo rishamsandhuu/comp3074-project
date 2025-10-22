@@ -4,63 +4,31 @@ import android.content.Context
 import kotlinx.coroutines.flow.Flow
 
 class PoiRepository private constructor(context: Context) {
-    private val db = AppDatabase.get(context)
-    private val poiDao = db.poiDao()
-    private val addrDao = db.addressDao()
+    private val dao = AppDatabase.get(context).poiDao()
 
-    val allPois: Flow<List<Poi>> = poiDao.getAll()
+    val allPois: Flow<List<Poi>> = dao.getAll()
 
-    // Basic ops
-    suspend fun upsert(poi: Poi) = poiDao.upsert(poi)
-    suspend fun delete(poi: Poi) = poiDao.delete(poi)
-    suspend fun getById(id: Long) = poiDao.getById(id)
+    suspend fun upsert(poi: Poi) = dao.upsert(poi)
+    suspend fun delete(poi: Poi) = dao.delete(poi)
+    suspend fun getById(id: Long) = dao.getById(id)
+    fun observeById(id: Long): Flow<Poi?> = dao.observeById(id)
 
-    // Observe one with address
-    fun observeWithAddress(id: Long): Flow<PoiWithAddress?> = poiDao.observeWithAddress(id)
-
-    // Add new POI along with a new address
-    suspend fun addPoiWithAddress(
-        name: String,
-        openUntil: String,
-        addressLine: String,
-        rating: Float,
-        latitude: Double? = null,
-        longitude: Double? = null
-    ) {
-        val addressId = addrDao.insert(Address(line = addressLine))
-        poiDao.upsert(
+    // ✅ Add with address string
+    suspend fun addPoi(name: String, rating: Float, address: String?) {
+        dao.upsert(
             Poi(
                 name = name,
-                openUntil = openUntil,
-                latitude = latitude,
-                longitude = longitude,
+                openUntil = "Open until 10:00 pm",
                 rating = rating,
-                addressId = addressId
+                address = address
             )
         )
     }
 
-    // Update both poi and its address (creates a new address if it was null)
-    suspend fun updatePoiAndAddress(
-        poiId: Long,
-        name: String,
-        openUntil: String,
-        addressLine: String,
-        rating: Float
-    ) {
-        val existing = poiDao.getById(poiId) ?: return
-        val addrId = existing.addressId ?: addrDao.insert(Address(line = addressLine))
-        if (existing.addressId != null) {
-            addrDao.update(Address(id = addrId, line = addressLine))
-        }
-        poiDao.upsert(
-            existing.copy(
-                name = name,
-                openUntil = openUntil,
-                rating = rating,
-                addressId = addrId
-            )
-        )
+    // ✅ Update name/rating/address of an existing poi
+    suspend fun updatePoi(poiId: Long, name: String, rating: Float, address: String?) {
+        val existing = dao.getById(poiId) ?: return
+        dao.upsert(existing.copy(name = name, rating = rating, address = address))
     }
 
     companion object {
