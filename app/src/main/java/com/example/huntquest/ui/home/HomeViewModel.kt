@@ -16,15 +16,13 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     fun save(poi: Poi) = viewModelScope.launch { repo.upsert(poi) }
     fun remove(poi: Poi) = viewModelScope.launch { repo.delete(poi) }
 
-    // New helpers
-    fun addPoiWithAddress(name: String, address: String, rating: Float) = viewModelScope.launch {
-        // set a sensible default for openUntil if you don't collect it on the form
-        repo.addPoiWithAddress(name, openUntil = "Open until 10:00 pm", addressLine = address, rating = rating)
+    fun addPoi(name: String, rating: Float, address: String?) = viewModelScope.launch {
+        repo.addPoi(name, rating, address)
     }
 
-    fun updatePoiAndAddress(poiId: Long, name: String, address: String, rating: Float) = viewModelScope.launch {
-        repo.updatePoiAndAddress(poiId, name, openUntil = "Open until 10:00 pm", addressLine = address, rating = rating)
+    fun updatePoi(poiId: Long, name: String, rating: Float, address: String?) = viewModelScope.launch {
+        repo.updatePoi(poiId, name, rating, address)
     }
 
-    fun observePoiWithAddress(poiId: Long) = repo.observeWithAddress(poiId).asLiveData()
+    fun observePoi(poiId: Long) = repo.observeById(poiId).asLiveData()
 }

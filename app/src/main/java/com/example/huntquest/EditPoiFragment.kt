@@ -34,21 +34,21 @@ class EditPoiFragment : Fragment() {
         val ratingBar: RatingBar = v.findViewById(R.id.ratingBar)
 
         // Prefill existing values
-        vm.observePoiWithAddress(poiId).observe(viewLifecycleOwner) { data ->
-            data?.let {
-                etName.setText(it.poi.name)
-                etAddress.setText(it.address?.line.orEmpty())
-                ratingBar.rating = it.poi.rating
+        vm.observePoi(poiId).observe(viewLifecycleOwner) { poi ->
+            poi?.let {
+                etName.setText(it.name)
+                ratingBar.rating = it.rating
+                etAddress.setText(it.address.orEmpty())   // ✅ prefill address
             }
         }
 
         v.findViewById<MaterialButton>(R.id.btnSave).setOnClickListener {
             val name = etName.text.toString().trim()
-            val address = etAddress.text.toString().trim()
+            val address = etAddress.text.toString().trim().ifEmpty { null }
             val rating = ratingBar.rating
 
             if (poiId > 0 && name.isNotEmpty()) {
-                vm.updatePoiAndAddress(poiId, name, address, rating)
+                vm.updatePoi(poiId, name, rating, address)  // ✅ update address too
                 findNavController().popBackStack()
             }
         }
