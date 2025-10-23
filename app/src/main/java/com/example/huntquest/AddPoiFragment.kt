@@ -14,6 +14,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.huntquest.ui.home.HomeViewModel
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
+import com.google.android.material.snackbar.Snackbar
 
 class AddPoiFragment : Fragment() {
 
@@ -31,10 +34,10 @@ class AddPoiFragment : Fragment() {
         val etName: EditText = v.findViewById(R.id.etName)
         val etAddress: EditText = v.findViewById(R.id.etAddress)
         val ratingBar: RatingBar = v.findViewById(R.id.ratingBar)
+        val chipGroup: ChipGroup = v.findViewById(R.id.chipGroupTags)
         val btnSave: MaterialButton = v.findViewById(R.id.btnSave)
         val btnCancel: MaterialButton = v.findViewById(R.id.btnCancel)
 
-        // Start with 0 stars
         ratingBar.rating = 0f
 
         btnSave.setOnClickListener {
@@ -42,15 +45,27 @@ class AddPoiFragment : Fragment() {
             val address: String? = etAddress.text.toString().trim().ifEmpty { null }
             val rating = ratingBar.rating
 
+            val selectedTags = mutableListOf<String>()
+            for (i in 0 until chipGroup.childCount){
+                val chip = chipGroup.getChildAt(i) as Chip
+                if (chip.isChecked) selectedTags += chip.text.toString()
+            }
+
+            val tagsCsv = selectedTags.joinToString(", ")
+
             if (name.isEmpty()) {
                 Toast.makeText(requireContext(), "Please enter a name", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            // Persist to DB (stores address as TEXT in pois.address)
-            vm.addPoi(name = name, rating = rating, address = address, tagCsv = "")
+            vm.addPoi(
+                name = name,
+                rating = rating,
+                address = address,
+                tagCsv = tagsCsv
+            )
 
-            // Navigate back to Home; the list updates from Room automatically
+            Snackbar.make(v, "POI saved successfully", Snackbar.LENGTH_SHORT).show()
             findNavController().popBackStack()
         }
 
