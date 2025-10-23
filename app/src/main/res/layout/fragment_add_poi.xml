@@ -51,7 +51,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/name"
-                    android:layout_marginTop="6dp">
+                    android:layout_marginTop="6dp"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="#80FFFFFF">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etName"
                         android:layout_width="match_parent"
@@ -65,7 +67,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/address"
-                    android:layout_marginTop="6dp">
+                    android:layout_marginTop="6dp"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="#80FFFFFF">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etAddress"
                         android:layout_width="match_parent"
@@ -79,7 +83,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/task"
-                    android:layout_marginTop="6dp">
+                    android:layout_marginTop="6dp"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="#80FFFFFF">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etTask"
                         android:layout_width="match_parent"
@@ -93,7 +99,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/tags"
-                    android:layout_marginTop="6dp">
+                    android:layout_marginTop="6dp"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="#80FFFFFF">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etTags"
                         android:layout_width="match_parent"
@@ -113,15 +121,15 @@
 
                 <RatingBar
                     android:id="@+id/ratingBar"
-                    style="?android:attr/ratingBarStyleSmall"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:numStars="5"
                     android:stepSize="1"
-                    android:rating="3"
-                    android:progressTint="#FFD700"  />       <!-- filled stars(yellow) -->
-                android:secondaryProgressTint="#555555"       <!-- partially filled -->
-                android:progressBackgroundTint="#555555"    <!-- empty stars (dim) -->
+                    android:rating="0"
+                    android:isIndicator="false"
+                    android:progressTint="@android:color/holo_orange_light"
+                    android:secondaryProgressTint="@android:color/darker_gray"
+                    android:progressBackgroundTint="@android:color/darker_gray"/>
 
                 <!-- Spacer to push buttons down a bit inside the card -->
                 <View
