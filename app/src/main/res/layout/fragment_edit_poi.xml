@@ -3,133 +3,132 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@android:color/black">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="16dp">
 
-        <!-- Title (optional) -->
         <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="POI details"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_gravity="center_horizontal"
-            android:paddingBottom="12dp" />
-
-        <!-- NAME -->
-        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tvEditPoiHeading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"
-            app:hintTextColor="#80FFFFFF"
+            android:text="@string/edit_poi"
+            android:textColor="@color/hq_purple"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxBackgroundMode="outline"
-            app:boxStrokeWidth="1dp"
-            app:boxStrokeColor="#55FFFFFF"
-            android:layout_marginTop="8dp">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=""
+            app:boxStrokeColor="@android:color/white">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
-                android:textColorHint="#80FFFFFF"
-                android:inputType="textCapWords" />
+                android:textColorHint="@android:color/darker_gray"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- ADDRESS -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/address"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"/>
+
         <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Address"
-            app:hintTextColor="#80FFFFFF"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxBackgroundMode="outline"
-            app:boxStrokeWidth="1dp"
-            app:boxStrokeColor="#55FFFFFF"
-            android:layout_marginTop="12dp">
+            android:hint=""
+            app:boxStrokeColor="@android:color/white">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
-                android:textColorHint="#80FFFFFF"
-                android:inputType="textPostalAddress" />
+                android:textColorHint="@android:color/darker_gray"
+                android:inputType="textPostalAddress"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- TASK (optional, keep id if you use it elsewhere) -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Task"
-            app:hintTextColor="#80FFFFFF"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxBackgroundMode="outline"
-            app:boxStrokeWidth="1dp"
-            app:boxStrokeColor="#55FFFFFF"
-            android:layout_marginTop="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etTask"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:textColorHint="#80FFFFFF"
-                android:inputType="textCapSentences" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- TAGS (optional) -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Tags"
-            app:hintTextColor="#80FFFFFF"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            app:boxBackgroundMode="outline"
-            app:boxStrokeWidth="1dp"
-            app:boxStrokeColor="#55FFFFFF"
-            android:layout_marginTop="12dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etTags"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:textColorHint="#80FFFFFF"
-                android:inputType="text" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Rating -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Rating"
+            android:text="@string/select_tags"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="12dp"/>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupTags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:singleSelection="false">
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tag_view"
+                android:checkable="true" />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tag_food"
+                android:checkable="true" />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tag_historic"
+                android:checkable="true" />
+
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tag_nature"
+                android:checkable="true" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rating"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"/>
 
         <RatingBar
             android:id="@+id/ratingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:numStars="5"
-            android:stepSize="1"
-            android:rating="0"
-            android:isIndicator="false"
-            android:progressTint="@android:color/holo_orange_light"
-            android:secondaryProgressTint="@android:color/darker_gray"
-            android:progressBackgroundTint="@android:color/darker_gray" />
+            android:stepSize="1"/>
 
-        <!-- Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -142,7 +141,9 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="Save" />
+                android:text="@string/save"
+                app:backgroundTint="@color/hq_purple"
+                android:textColor="@android:color/white" />
 
             <Space
                 android:layout_width="16dp"
@@ -153,10 +154,11 @@
                 android:layout_width="0dp"
                 android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="Cancel" />
+                android:text="@string/cancel"
+                app:backgroundTint="@color/hq_purple"
+                android:textColor="@android:color/white" />
         </LinearLayout>
 
-        <!-- Bottom padding so content isn't hidden behind nav bar -->
         <Space
             android:layout_width="1dp"
             android:layout_height="32dp" />

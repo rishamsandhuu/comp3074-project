@@ -14,6 +14,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     val pois = repo.allPois.asLiveData()
 
     fun save(poi: Poi) = viewModelScope.launch { repo.upsert(poi) }
+
+    fun observePoi(id: Long) = repo.observeById(id).asLiveData()
     fun remove(poi: Poi) = viewModelScope.launch { repo.delete(poi) }
 
     fun addPoi(name: String, rating: Float, address: String?, tagCsv: String) = viewModelScope.launch {
@@ -24,5 +26,4 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         repo.updatePoi(poiId, name, rating, address, tagCsv)
     }
 
-    fun observePoi(poiId: Long) = repo.observeById(poiId).asLiveData()
 }
