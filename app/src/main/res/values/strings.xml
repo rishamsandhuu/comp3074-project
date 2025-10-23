@@ -84,7 +84,7 @@
     <string name="tag_food">Food</string>
     <string name="tag_historic">Historic</string>
     <string name="tag_nature">Nature</string>
-
+    <string name="edit_poi">edit_poi</string>
 
 
 </resources>
