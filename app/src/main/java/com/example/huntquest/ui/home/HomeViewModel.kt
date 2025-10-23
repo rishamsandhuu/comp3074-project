@@ -18,12 +18,32 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
     fun observePoi(id: Long) = repo.observeById(id).asLiveData()
     fun remove(poi: Poi) = viewModelScope.launch { repo.delete(poi) }
 
-    fun addPoi(name: String, rating: Float, address: String?, tagCsv: String) = viewModelScope.launch {
-        repo.addPoi(name, rating, address, tagCsv)
+    fun addPoi(
+        name: String,
+        rating: Float,
+        address: String?,
+        tagCsv: String,
+    ) = viewModelScope.launch {
+        repo.addPoi(
+            name,
+            rating,
+            address,
+            tagCsv)
     }
 
-    fun updatePoi(poiId: Long, name: String, rating: Float, address: String?, tagCsv: String) = viewModelScope.launch {
-        repo.updatePoi(poiId, name, rating, address, tagCsv)
+    fun updatePoi(
+        poiId: Long,
+        name: String,
+        rating: Float,
+        address: String?,
+        tagCsv: String,
+        latitude: Double?,
+        longitude: Double?
+    ) {
+        viewModelScope.launch {
+            repo.updatePoi(poiId, name, rating, address, tagCsv, latitude, longitude)
+        }
     }
+
 
 }

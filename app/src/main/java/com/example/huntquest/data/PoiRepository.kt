@@ -50,7 +50,7 @@ class PoiRepository private constructor(private val context: Context) {
     }
 
     // Update name/rating/address of an existing poi
-    suspend fun updatePoi(poiId: Long, name: String, rating: Float, address: String?, tagsCsv: String) {
+    suspend fun updatePoi(poiId: Long, name: String, rating: Float, address: String?, tagsCsv: String, latitude: Double?, longitude: Double?) {
         val existing = dao.getById(poiId) ?: return
 
         val addressChanged = existing.address != address
