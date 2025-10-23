@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import java.util.Locale
 
 class PoiAdapter(
     private val items: MutableList<Poi>,
@@ -14,6 +15,7 @@ class PoiAdapter(
     private val onItemClick: (Poi) -> Unit   // Added click listener for the whole item
 ) : RecyclerView.Adapter<PoiAdapter.VH>() {
 
+    private val visible = items.toMutableList()
     class VH(v: View) : RecyclerView.ViewHolder(v) {
         val tvName: TextView = v.findViewById(R.id.tvName)
         val tvDistance: TextView = v.findViewById(R.id.tvDistance)
@@ -44,4 +46,33 @@ class PoiAdapter(
     }
 
     override fun getItemCount(): Int = items.size
+
+    fun submitList(newItems: List<Poi>) {
+        items.clear()
+        items.addAll(newItems)
+        filter("") // reset view to all
+    }
+
+    fun removeAt(adapterPos: Int) {
+        val poi = visible[adapterPos]
+        items.remove(poi)
+        visible.removeAt(adapterPos)
+        notifyItemRemoved(adapterPos)
+    }
+
+    fun filter(query: String) {
+        val q = query.trim().lowercase(Locale.getDefault())
+        visible.clear()
+        if (q.isEmpty()) {
+            visible.addAll(items)
+        } else {
+            visible.addAll(
+                items.filter { poi ->
+                    poi.name.lowercase(Locale.getDefault()).contains(q) ||
+                            poi.hours.lowercase(Locale.getDefault()).contains(q)
+                }
+            )
+        }
+        notifyDataSetChanged()
+    }
 }

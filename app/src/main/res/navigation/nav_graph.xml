@@ -22,6 +22,16 @@
         android:name="com.example.huntquest.AddPoiFragment"
         android:label="fragment_add_poi"
         tools:layout="@layout/fragment_add_poi" />
+
+    <fragment
+        android:id="@+id/editPoiFragment"
+        android:name="com.example.huntquest.EditPoiFragment"
+        android:label="Edit POI">
+        <argument
+            android:name="poiId"
+            app:argType="long" />
+    </fragment>
+
     <fragment
         android:id="@+id/mapFragment"
         android:name="com.example.huntquest.MapFragment"
