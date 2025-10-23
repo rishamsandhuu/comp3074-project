@@ -48,7 +48,7 @@ class EditPoiFragment : Fragment() {
             val rating = ratingBar.rating
 
             if (poiId > 0 && name.isNotEmpty()) {
-                vm.updatePoi(poiId, name, rating, address)  // ✅ update address too
+                vm.updatePoi(poiId, name, rating, address, tagCsv = "")
                 findNavController().popBackStack()
             }
         }

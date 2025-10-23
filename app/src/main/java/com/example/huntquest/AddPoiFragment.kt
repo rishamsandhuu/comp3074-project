@@ -48,7 +48,7 @@ class AddPoiFragment : Fragment() {
             }
 
             // Persist to DB (stores address as TEXT in pois.address)
-            vm.addPoi(name = name, rating = rating, address = address)
+            vm.addPoi(name = name, rating = rating, address = address, tagCsv = "")
 
             // Navigate back to Home; the list updates from Room automatically
             findNavController().popBackStack()

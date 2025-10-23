@@ -12,5 +12,8 @@ data class Poi(
     val longitude: Double? = null,
     // new fields
     val rating: Float = 0f,
-    val address: String? = null
+    val address: String? = null,
+
+    //tags for poi - nirja edits
+    val tagsCsv: String = ""
 )
