@@ -1,156 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="@android:color/black">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Card-like container with teal stroke -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card"
-            android:layout_width="0dp"
+        <!-- Heading -->
+        <TextView
+            android:id="@+id/tvAddPoiHeading"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/card_bg_dark"
-            app:strokeColor="@color/hq_teal"
-            app:strokeWidth="2dp"
-            app:cardCornerRadius="14dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            android:text="@string/add_poi"
+            android:textColor="@color/hq_purple"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"/>
 
-            <LinearLayout
+        <!-- Label above Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/name"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=""
+            app:boxStrokeColor="@android:color/white">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="14dp"
-                tools:ignore="ExtraText">
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/darker_gray"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Section title -->
-                <TextView
-                    android:id="@+id/tvSection"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/poi_details"
-                    android:textStyle="bold"
-                    android:textColor="@color/hq_teal"
-                    android:gravity="center"
-                    android:textSize="16sp"
-                    android:paddingBottom="8dp"/>
+        <!-- Label above Address -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/address"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"/>
 
-                <!-- TextInput styles = purple outline -->
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/HQ.Outlined"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/name"
-                    android:layout_marginTop="6dp"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="#80FFFFFF">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        tools:ignore="VisualLintTextFieldSize" />
-                </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint=""
+            app:boxStrokeColor="@android:color/white">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/HQ.Outlined"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/address"
-                    android:layout_marginTop="6dp"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="#80FFFFFF">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etAddress"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPostalAddress"
-                        tools:ignore="VisualLintTextFieldSize" />
-                </com.google.android.material.textfield.TextInputLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/darker_gray"
+                android:inputType="textPostalAddress"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/HQ.Outlined"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/task"
-                    android:layout_marginTop="6dp"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="#80FFFFFF">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etTask"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"
-                        tools:ignore="VisualLintTextFieldSize" />
-                </com.google.android.material.textfield.TextInputLayout>
+        <!-- Tags Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/select_tags"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"/>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    style="@style/HQ.Outlined"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/tags"
-                    android:layout_marginTop="6dp"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="#80FFFFFF">
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etTags"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="text"
-                        tools:ignore="VisualLintTextFieldSize" />
-                </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupTags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:singleSelection="false">
 
-                <!-- Rating -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rating"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/white"
-                    android:layout_marginTop="8dp"/>
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tag_view"
+                android:checkable="true" />
 
-                <RatingBar
-                    android:id="@+id/ratingBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:stepSize="1"
-                    android:rating="0"
-                    android:isIndicator="false"
-                    android:progressTint="@android:color/holo_orange_light"
-                    android:secondaryProgressTint="@android:color/darker_gray"
-                    android:progressBackgroundTint="@android:color/darker_gray"/>
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tag_food"
+                android:checkable="true" />
 
-                <!-- Spacer to push buttons down a bit inside the card -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tag_historic"
+                android:checkable="true" />
 
-        <!-- Buttons row (Save / Cancel) -->
+            <com.google.android.material.chip.Chip
+                style="@style/Widget.MaterialComponents.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tag_nature"
+                android:checkable="true" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- Rating Label -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rating"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"/>
+
+        <RatingBar
+            android:id="@+id/ratingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1"/>
+
+        <!-- Buttons -->
         <LinearLayout
-            android:id="@+id/buttonRow"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintTop_toBottomOf="@id/card"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:layout_marginTop="16dp">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
@@ -158,11 +148,8 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:text="@string/save"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                app:cornerRadius="14dp"
                 app:backgroundTint="@color/hq_purple"
-                tools:ignore="VisualLintButtonSize" />
+                android:textColor="@android:color/white"/>
 
             <Space
                 android:layout_width="12dp"
@@ -174,12 +161,9 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:text="@string/cancel"
-                android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                app:cornerRadius="14dp"
                 app:backgroundTint="@color/hq_purple"
-                tools:ignore="VisualLintButtonSize" />
+                android:textColor="@android:color/white"/>
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 </ScrollView>

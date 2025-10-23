@@ -24,4 +24,10 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textColorHint">@color/hq_text_dim</item>
     </style>
+
+    <style name="WhiteLabelStyle" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+
 </resources>

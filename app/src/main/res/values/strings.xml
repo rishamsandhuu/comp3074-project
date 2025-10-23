@@ -78,6 +78,14 @@
     <string name="share_task_details">Share task details</string>
 
 
+    <string name="add_poi">Add POI</string>
+    <string name="select_tags">Select tags</string>
+    <string name="tag_view">View</string>
+    <string name="tag_food">Food</string>
+    <string name="tag_historic">Historic</string>
+    <string name="tag_nature">Nature</string>
+
+
 
 </resources>
 
