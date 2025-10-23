@@ -19,6 +19,10 @@ class TeamFragment : Fragment(R.layout.fragment_team) {
     private lateinit var recycler: RecyclerView
     private lateinit var adapter: TeamMemberAdapter
 
+    // About overlay bits
+    private lateinit var btnInfo: View
+    private lateinit var aboutOverlay: View
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -51,6 +55,23 @@ class TeamFragment : Fragment(R.layout.fragment_team) {
         // --- FAB: Add Member ---
         view.findViewById<FloatingActionButton>(R.id.fabAdd).setOnClickListener {
             findNavController().navigate(R.id.addMemberFragment)
+        }
+
+        // --- About overlay wiring (uses ids in fragment_team.xml) ---
+        btnInfo = view.findViewById(R.id.btnInfo)
+        aboutOverlay = view.findViewById(R.id.aboutOverlay)
+
+        btnInfo.setOnClickListener { aboutOverlay.visibility = View.VISIBLE }
+        aboutOverlay.setOnClickListener { aboutOverlay.visibility = View.GONE }
+
+        // Back press: close overlay first
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            if (aboutOverlay.visibility == View.VISIBLE) {
+                aboutOverlay.visibility = View.GONE
+            } else {
+                isEnabled = false
+                requireActivity().onBackPressed()
+            }
         }
     }
 
