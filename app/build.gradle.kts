@@ -3,8 +3,10 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.navigation.safe.args) // <-- use the alias from version catalog
+    alias(libs.plugins.navigation.safe.args)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     kotlin("kapt")
+
 }
 
 val localProps = Properties().apply {
@@ -45,6 +47,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -54,13 +59,19 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    implementation("androidx.activity:activity-ktx:1.9.2")
+
+    //implementation("androidx.activity:activity-ktx:1.9.2")
     implementation("androidx.fragment:fragment-ktx:1.8.3")
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
+
+    implementation(libs.play.services.maps)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 
     //for autocomplete in address input fields
     implementation("com.google.android.libraries.places:places:3.5.0")

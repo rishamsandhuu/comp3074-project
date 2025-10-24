@@ -76,7 +76,9 @@
 
     <string name="share">Share</string>
     <string name="share_task_details">Share task details</string>
+    <string name="title_activity_maps">MapsActivity</string>
 
+    <string name="map_api_key">AIzaSyATNv0SiTKs4lgSO9a0JFoK992lSLpJzFw</string>
 
     <string name="add_poi">Add POI</string>
     <string name="select_tags">Select tags</string>

@@ -4,10 +4,11 @@ import android.content.Context
 import android.location.Geocoder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
-class PoiRepository private constructor(private val context: Context) {
+class PoiRepository public constructor(context: Context) {
     private val dao = AppDatabase.get(context).poiDao()
     val allPois: Flow<List<Poi>> = dao.getAll()
     suspend fun upsert(poi: Poi) = dao.upsert(poi)
@@ -68,6 +69,8 @@ class PoiRepository private constructor(private val context: Context) {
         ))
     }
 
+    fun allWithCoordinates(): Flow<List<Poi>> =
+        dao.getAll().map { list -> list.filter { it.latitude != null && it.longitude != null } }
     companion object {
         @Volatile private var INSTANCE: PoiRepository? = null
         fun get(context: Context): PoiRepository =

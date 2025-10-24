@@ -33,11 +33,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/mapFragment"
-        android:name="com.example.huntquest.MapFragment"
-        android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
-    <fragment
         android:id="@+id/teamFragment"
         android:name="com.example.huntquest.TeamFragment"
         android:label="fragment_team"
@@ -53,6 +48,17 @@
         android:name="com.example.huntquest.AddMemberFragment"
         android:label="Add Member"
         tools:layout="@layout/fragment_add_member" />
+    <fragment
+        android:id="@+id/poiDetailFragment"
+        android:name="com.example.huntquest.ActivityDetailsActivity"
+        android:label="POI Details"
+        tools:layout="@layout/fragment_poi_detail" />
+
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.example.huntquest.AboutFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_about" />
 
     <fragment
         android:id="@+id/editMemberFragment"
@@ -63,4 +69,23 @@
             android:name="memberId"
             app:argType="string" />
     </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.huntquest.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map">
+
+        <!-- default = show all POIs -->
+        <argument
+            android:name="mode"
+            app:argType="string"
+            android:defaultValue="all" />
+
+        <!-- single argument (nullable) carrying the destination -->
+        <argument
+            android:name="poi"
+            app:argType="com.google.android.gms.maps.model.LatLng"
+            app:nullable="true" />
+    </fragment>
+
 </navigation>

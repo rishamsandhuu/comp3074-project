@@ -1,79 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/black">
+    tools:context=".MapFragment">
 
-    <!-- Teal-outlined card that holds the dummy map -->
+    <!-- Google Map -->
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- Mini bottom card shown after marker click -->
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/mapCard"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:cardBackgroundColor="@android:color/transparent"
-        app:strokeColor="@color/hq_teal"
-        app:strokeWidth="2dp"
+        android:id="@+id/poiCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        app:cardElevation="6dp"
         app:cardCornerRadius="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnRow"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp">
-
-        <!-- Layered container to fake the map -->
-        <ImageView
-            android:id="@+id/imageView"
+        app:layout_anchorGravity="bottom"
+        android:layout_gravity="bottom"
+        android:backgroundTint="@android:color/transparent"
+        app:cardUseCompatPadding="true"
+        app:layout_insetEdge="bottom">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:importantForAccessibility="no"
-            android:src="@drawable/dummy_map" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
 
+
+            <TextView
+                android:id="@+id/tvPoiName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                tools:text="Harbourfront Lookout" />
+
+
+            <TextView
+                android:id="@+id/tvPoiAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:alpha="0.8"
+                android:maxLines="2"
+                android:ellipsize="end"
+                tools:text="235 Queens Quay W, Toronto" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end"
+                android:paddingTop="12dp">
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDetails"
+                    style="@style/Widget.Material3.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Details" />
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnDirections"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Directions" />
+            </LinearLayout>
+        </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <!-- Button row -->
-    <LinearLayout
-        android:id="@+id/btnRow"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="20dp">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnDirections"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="@string/directions"
-            android:textAllCaps="true"
-            android:textColor="@android:color/white"
-            android:background="@drawable/btn_purple_bg"
-            android:elevation="0dp"
-            android:layout_marginEnd="10dp"
-            tools:ignore="VisualLintButtonSize" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnFullscreen"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:text="@string/full_screen_view"
-            android:textAllCaps="true"
-            android:textColor="@android:color/white"
-            android:background="@drawable/btn_purple_bg"
-            android:elevation="0dp"
-            android:layout_marginStart="10dp"
-            tools:ignore="VisualLintButtonSize" />
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
