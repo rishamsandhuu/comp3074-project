@@ -41,8 +41,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- No intent-filter => should not be exported -->
+<!--        No intent-filter => should not be exported-->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
