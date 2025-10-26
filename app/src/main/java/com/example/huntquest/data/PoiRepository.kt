@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import java.util.Locale
 
-class PoiRepository public constructor(context: Context) {
+class PoiRepository(private val context: Context)  {
     private val dao = AppDatabase.get(context).poiDao()
     val allPois: Flow<List<Poi>> = dao.getAll()
     suspend fun upsert(poi: Poi) = dao.upsert(poi)

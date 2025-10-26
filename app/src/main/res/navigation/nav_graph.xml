@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.huntquest.HomeFragment"
+        android:name="com.example.huntquest.ui.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
@@ -37,11 +37,6 @@
         android:name="com.example.huntquest.TeamFragment"
         android:label="fragment_team"
         tools:layout="@layout/fragment_team" />
-    <fragment
-        android:id="@+id/directionsFragment"
-        android:name="com.example.huntquest.DirectionsFragment"
-        android:label="fragment_directions"
-        tools:layout="@layout/fragment_directions" />
 
     <fragment
         android:id="@+id/addMemberFragment"
@@ -71,8 +66,8 @@
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.example.huntquest.MapFragment"
-        android:label="fragment_map"
+        android:name="com.example.huntquest.ui.map.MapFragment"
+        android:label="@string/title_map"
         tools:layout="@layout/fragment_map">
 
         <!-- default = show all POIs -->
@@ -86,6 +81,29 @@
             android:name="poi"
             app:argType="com.google.android.gms.maps.model.LatLng"
             app:nullable="true" />
+
+        <action
+            android:id="@+id/action_map_to_directions"
+            app:destination="@id/directionsFragment" />
+    </fragment>
+
+    <!--changes -->
+    <fragment
+        android:id="@+id/directionsFragment"
+        android:name="com.example.huntquest.ui.map.DirectionsFragment"
+        tools:layout="@layout/fragment_directions">
+        <argument
+            android:name="originLat"
+            app:argType="float" />
+        <argument
+            android:name="originLng"
+            app:argType="float" />
+        <argument
+            android:name="destLat"
+            app:argType="float" />
+        <argument
+            android:name="destLng"
+            app:argType="float" />
     </fragment>
 
 </navigation>

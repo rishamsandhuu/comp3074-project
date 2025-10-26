@@ -28,7 +28,6 @@
     <string name="walking_">Walking</string>
     <string name="eta_12_min">ETA: 12 min</string>
     <string name="_4_8_km">4.8 km</string>
-    <string name="start_">Start</string>
     <string name="open_directions">Open directions</string>
     <string name="details_old_mill">Details: Old Mill</string>
     <string name="_123_king_street_w_toronto_on_m5h1a1">123 King Street W, Toronto, ON M5H1A1</string>
@@ -87,7 +86,11 @@
     <string name="tag_historic">Historic</string>
     <string name="tag_nature">Nature</string>
     <string name="edit_poi">edit_poi</string>
-
-
+    <string name="details">Details</string>
+    <string name="eta_placeholder">ETA: %1$s</string>
+    <string name="distance_placeholder">%1$s</string>
+    <string name="start_">Start</string>
+    <string name="stop_">Stop</string>
+    <string name="title_map">Map</string>
 </resources>
 

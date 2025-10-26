@@ -3,10 +3,18 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.navigation.safe.args)
-    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
-    kotlin("kapt")
 
+    // Use the Kotlin Safe Args plugin (pick ONE of the two lines below):
+    alias(libs.plugins.navigation.safe.args)              // if you have it in libs.versions.toml
+    // id("androidx.navigation.safeargs.kotlin") version "2.7.7"  // else use explicit id+version
+
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("com.google.devtools.ksp") version "1.9.24-1.0.20" // KSP for Room
+}
+
+secrets {
+    // ⬅️ must be TOP-LEVEL (not inside android{})
+    defaultPropertiesFileName = "local.properties"
 }
 
 val localProps = Properties().apply {
@@ -29,6 +37,16 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
+
+        // Directions key from local.properties or env
+        val directionsKey: String =
+            localProps.getProperty("DIRECTIONS_API_KEY")      // <-- use localProps
+                ?: System.getenv("DIRECTIONS_API_KEY")        // fallback for CI
+                ?: ""
+
+        // expose as a resource (or use buildConfigField if you prefer)
+        resValue("string", "directions_key", directionsKey)
+        // buildConfigField("String", "DIRECTIONS_API_KEY", "\"$directionsKey\"")
     }
 
     buildTypes {
@@ -40,18 +58,14 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-    buildFeatures {
-        viewBinding = true
-    }
+    kotlinOptions { jvmTarget = "11" }
+    buildFeatures { viewBinding = true }
 }
-
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -79,7 +93,9 @@ dependencies {
     // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
-    kapt(libs.androidx.room.compiler)
+    //kapt(libs.androidx.room.compiler)
+
+    ksp("androidx.room:room-compiler:2.6.1")
 
     // Lifecycle / ViewModel
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -87,4 +103,5 @@ dependencies {
 
     // Coroutines Android (main thread dispatcher)
     implementation(libs.kotlinx.coroutines.android)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }

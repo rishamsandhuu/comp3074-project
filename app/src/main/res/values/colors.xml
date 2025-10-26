@@ -8,5 +8,5 @@
     <color name="hq_text_dim">#B0B0B0</color>   <!-- Secondary text (hours, subtitles) -->
     <color name="card_bg_dark">#101010</color>  <!-- Card backgrounds (POI items, panels) -->
     <color name="hq_avatar_bg">#E8DDFB</color>
-
+    <color name="hq_purple_20">#336750A4</color>
 </resources>

@@ -25,9 +25,18 @@
         <item name="android:textColorHint">@color/hq_text_dim</item>
     </style>
 
+
     <style name="WhiteLabelStyle" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:textColor">@android:color/white</item>
     </style>
+    <style name="HQ.Button.Filled" parent="Widget.MaterialComponents.Button">
+        <!-- pick your brand colors -->
+        <item name="backgroundTint">@color/hq_purple</item>
+        <item name="rippleColor">@color/hq_purple_20</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
 
-
+    <style name="HQ.Button.Text" parent="Widget.MaterialComponents.Button.TextButton" />
+    <style name="HQ.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton" />
 </resources>
