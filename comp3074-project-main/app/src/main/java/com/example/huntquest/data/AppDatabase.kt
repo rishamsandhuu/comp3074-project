@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 
 @Database(
     entities = [Poi::class],
-    version = 6,                      // bumped to 6
+    version = 7,                       // bumped for reseed
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -71,11 +71,15 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        // ✅ v5 → v6 migration for new `task` column
         private val MIGRATION_5_6 = object : Migration(5, 6) {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE `POIs` ADD COLUMN `task` TEXT")
             }
+        }
+
+        // dummy v6→v7 migration just to trigger reseed
+        private val MIGRATION_6_7 = object : Migration(6, 7) {
+            override fun migrate(db: SupportSQLiteDatabase) { /* no-op */ }
         }
 
         fun get(context: Context): AppDatabase =
@@ -90,7 +94,8 @@ abstract class AppDatabase : RoomDatabase() {
                         MIGRATION_2_3,
                         MIGRATION_3_4,
                         MIGRATION_4_5,
-                        MIGRATION_5_6
+                        MIGRATION_5_6,
+                        MIGRATION_6_7
                     )
                     .addCallback(SeedCallback(context.applicationContext))
                     .build().also { INSTANCE = it }
@@ -102,6 +107,7 @@ abstract class AppDatabase : RoomDatabase() {
             super.onCreate(db)
             CoroutineScope(Dispatchers.IO).launch {
                 val dao = get(appContext).poiDao()
+
                 dao.upsert(
                     Poi(
                         name = "CN Tower",
@@ -110,9 +116,10 @@ abstract class AppDatabase : RoomDatabase() {
                         longitude = -79.3871,
                         address = "290 Bremner Blvd, Toronto, ON",
                         tagsCsv = "#landmark #view",
-                        task = "Find the highest observation level."
+                        task = "Soar into the clouds and conquer Toronto’s skyline! Ride the glass elevator up the CN Tower, feel the floor tremble beneath your feet on the EdgeWalk, and uncover the hidden clue etched near the viewing glass. Remember—real adventurers look down without fear."
                     )
                 )
+
                 dao.upsert(
                     Poi(
                         name = "High Park",
@@ -121,9 +128,10 @@ abstract class AppDatabase : RoomDatabase() {
                         longitude = -79.4637,
                         address = "1873 Bloor St W, Toronto, ON",
                         tagsCsv = "#nature #trails",
-                        task = "Locate the statue near Grenadier Pond."
+                        task = "Wander beneath the canopy of ancient oaks and chase the whispers of the breeze along Grenadier Pond. Your mission: find the statue that watches over the water, and listen closely—it may tell you where the next clue lies."
                     )
                 )
+
                 dao.upsert(
                     Poi(
                         name = "Old Mill",
@@ -132,7 +140,31 @@ abstract class AppDatabase : RoomDatabase() {
                         longitude = -79.4934,
                         address = "21 Old Mill Rd, Toronto, ON",
                         tagsCsv = "#history #architecture",
-                        task = "Find the waterwheel and take a photo."
+                        task = "Step back in time to where the Humber River powered the heart of the city. Search for the waterwheel that still hums with old stories. Snap a photo, follow the sound of rushing water, and uncover the secret that the mill has guarded for generations."
+                    )
+                )
+
+                dao.upsert(
+                    Poi(
+                        name = "Distillery District",
+                        openUntil = "Open until 9:00 pm",
+                        latitude = 43.6500,
+                        longitude = -79.3590,
+                        address = "55 Mill St, Toronto, ON",
+                        tagsCsv = "#arts #heritage",
+                        task = "Among cobblestones and copper stills, creativity brews again. Explore the art alleys and spot the massive heart sculpture. Decode the quote carved on the nearby wall to reveal your next destination."
+                    )
+                )
+
+                dao.upsert(
+                    Poi(
+                        name = "St. Lawrence Market",
+                        openUntil = "Open until 6:00 pm",
+                        latitude = 43.6487,
+                        longitude = -79.3716,
+                        address = "93 Front St E, Toronto, ON",
+                        tagsCsv = "#food #culture",
+                        task = "Follow the scent of fresh bread and spices. Your quest: find the oldest vendor still telling stories of the city’s beginnings. Ask what they sell that’s been there since the 1800s, and note their answer—it’s a key part of your legend."
                     )
                 )
             }
