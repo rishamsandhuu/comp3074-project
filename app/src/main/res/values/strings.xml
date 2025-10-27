@@ -92,4 +92,7 @@
     <string name="start_">Start</string>
     <string name="stop_">Stop</string>
     <string name="title_map">Map</string>
+
+    <string name="back_button">Back</string>
+
 </resources>
