@@ -1,0 +1,42 @@
+<resources>
+    <style name="Rounded16">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">16dp</item>
+    </style>
+
+    <style name="RetroTag">
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:textColor">#00FFFF</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="RetroMiniButton">
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:background">@drawable/retro_glow_button</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="HQ.Outlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundMode">outline</item>
+        <item name="boxStrokeColor">@color/hq_purple</item>
+        <item name="hintTextColor">@color/hq_text_dim</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColorHint">@color/hq_text_dim</item>
+    </style>
+
+
+    <style name="WhiteLabelStyle" parent="TextAppearance.MaterialComponents.Body1">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+    <style name="HQ.Button.Filled" parent="Widget.MaterialComponents.Button">
+        <!-- pick your brand colors -->
+        <item name="backgroundTint">@color/hq_purple</item>
+        <item name="rippleColor">@color/hq_purple_20</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="cornerRadius">16dp</item>
+    </style>
+
+    <style name="HQ.Button.Text" parent="Widget.MaterialComponents.Button.TextButton" />
+    <style name="HQ.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton" />
+</resources>

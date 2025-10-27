@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="hq_purple">#7B1FA2</color>     <!-- top bar + buttons -->
+    <color name="hq_teal">#00C7C7</color>       <!-- Home icon/text -->
+    <color name="hq_pink">#C400A6</color>       <!-- Map/Team icon/text -->
+    <color name="hq_nav_bg">#121212</color>     <!-- bottom bar bg -->
+    <color name="hq_nav_text_unselected">#9E9E9E</color> <!-- optional -->
+    <color name="hq_text_dim">#B0B0B0</color>   <!-- Secondary text (hours, subtitles) -->
+    <color name="card_bg_dark">#101010</color>  <!-- Card backgrounds (POI items, panels) -->
+    <color name="hq_avatar_bg">#E8DDFB</color>
+    <color name="hq_purple_20">#336750A4</color>
+</resources>
