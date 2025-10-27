@@ -61,7 +61,7 @@ class HomeFragment : Fragment() {
             onItemClick = { poi ->
                 startActivity(
                     Intent(requireContext(), ActivityDetailsActivity::class.java)
-                        .putExtra("poiId", poi.id)
+                        .putExtra("poi_id", poi.id)
                 )
             }
         )

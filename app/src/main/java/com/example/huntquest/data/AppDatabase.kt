@@ -16,7 +16,7 @@ import com.example.huntquest.team.TeamMemberDao
 
 @Database(
     entities = [Poi::class, TeamMember::class],
-    version = 6,                      //bump version -  edits
+    version = 7,                      //bump version -  edits
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -116,9 +116,66 @@ abstract class AppDatabase : RoomDatabase() {
             super.onCreate(db)
             CoroutineScope(Dispatchers.IO).launch {
                 val dao = get(appContext).poiDao()
-                dao.upsert(Poi(name = "CN Tower",  openUntil = "Open until 10:00 pm", latitude = 43.6426, longitude = -79.3871))
-                dao.upsert(Poi(name = "High Park", openUntil = "Open until 11:00 pm", latitude = 43.6465, longitude = -79.4637))
-                dao.upsert(Poi(name = "Old Mill",  openUntil = "Open until 11:00 pm", latitude = 43.6501, longitude = -79.4934))
+
+                dao.upsert(
+                    Poi(
+                        name = "CN Tower",
+                        openUntil = "Open until 10:00 pm",
+                        latitude = 43.6426,
+                        longitude = -79.3871,
+                        address = "290 Bremner Blvd, Toronto, ON",
+                        tagsCsv = "#landmark #view",
+                        task = "Soar into the clouds and conquer Toronto’s skyline! Ride the glass elevator up the CN Tower, feel the floor tremble beneath your feet on the EdgeWalk, and uncover the hidden clue etched near the viewing glass. Remember—real adventurers look down without fear."
+                    )
+                )
+
+                dao.upsert(
+                    Poi(
+                        name = "High Park",
+                        openUntil = "Open until 11:00 pm",
+                        latitude = 43.6465,
+                        longitude = -79.4637,
+                        address = "1873 Bloor St W, Toronto, ON",
+                        tagsCsv = "#nature #trails",
+                        task = "Wander beneath the canopy of ancient oaks and chase the whispers of the breeze along Grenadier Pond. Your mission: find the statue that watches over the water, and listen closely—it may tell you where the next clue lies."
+                    )
+                )
+
+                dao.upsert(
+                    Poi(
+                        name = "Old Mill",
+                        openUntil = "Open until 11:00 pm",
+                        latitude = 43.6501,
+                        longitude = -79.4934,
+                        address = "21 Old Mill Rd, Toronto, ON",
+                        tagsCsv = "#history #architecture",
+                        task = "Step back in time to where the Humber River powered the heart of the city. Search for the waterwheel that still hums with old stories. Snap a photo, follow the sound of rushing water, and uncover the secret that the mill has guarded for generations."
+                    )
+                )
+
+                dao.upsert(
+                    Poi(
+                        name = "Distillery District",
+                        openUntil = "Open until 9:00 pm",
+                        latitude = 43.6500,
+                        longitude = -79.3590,
+                        address = "55 Mill St, Toronto, ON",
+                        tagsCsv = "#arts #heritage",
+                        task = "Among cobblestones and copper stills, creativity brews again. Explore the art alleys and spot the massive heart sculpture. Decode the quote carved on the nearby wall to reveal your next destination."
+                    )
+                )
+
+                dao.upsert(
+                    Poi(
+                        name = "St. Lawrence Market",
+                        openUntil = "Open until 6:00 pm",
+                        latitude = 43.6487,
+                        longitude = -79.3716,
+                        address = "93 Front St E, Toronto, ON",
+                        tagsCsv = "#food #culture",
+                        task = "Follow the scent of fresh bread and spices. Your quest: find the oldest vendor still telling stories of the city’s beginnings. Ask what they sell that’s been there since the 1800s, and note their answer—it’s a key part of your legend."
+                    )
+                )
             }
         }
     }
