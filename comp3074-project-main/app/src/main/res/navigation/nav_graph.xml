@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.huntquest.ui.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_teamFragment"
+            app:destination="@id/teamFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addPoiFragment"
+        android:name="com.example.huntquest.AddPoiFragment"
+        android:label="fragment_add_poi"
+        tools:layout="@layout/fragment_add_poi" />
+
+    <fragment
+        android:id="@+id/editPoiFragment"
+        android:name="com.example.huntquest.EditPoiFragment"
+        android:label="Edit POI">
+        <argument
+            android:name="poiId"
+            app:argType="long" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/teamFragment"
+        android:name="com.example.huntquest.TeamFragment"
+        android:label="fragment_team"
+        tools:layout="@layout/fragment_team" />
+
+    <fragment
+        android:id="@+id/addMemberFragment"
+        android:name="com.example.huntquest.AddMemberFragment"
+        android:label="Add Member"
+        tools:layout="@layout/fragment_add_member" />
+    <fragment
+        android:id="@+id/poiDetailFragment"
+        android:name="com.example.huntquest.ActivityDetailsActivity"
+        android:label="POI Details"
+        tools:layout="@layout/fragment_poi_detail" />
+
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.example.huntquest.AboutFragment"
+        android:label="About"
+        tools:layout="@layout/fragment_about" />
+
+    <fragment
+        android:id="@+id/editMemberFragment"
+        android:name="com.example.huntquest.EditMemberFragment"
+        android:label="Edit members"
+        tools:layout="@layout/fragment_edit_member">
+        <argument
+            android:name="memberId"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.huntquest.ui.map.MapFragment"
+        android:label="@string/title_map"
+        tools:layout="@layout/fragment_map">
+
+        <!-- default = show all POIs -->
+        <argument
+            android:name="mode"
+            app:argType="string"
+            android:defaultValue="all" />
+
+        <!-- single argument (nullable) carrying the destination -->
+        <argument
+            android:name="poi"
+            app:argType="com.google.android.gms.maps.model.LatLng"
+            app:nullable="true" />
+
+        <action
+            android:id="@+id/action_map_to_directions"
+            app:destination="@id/directionsFragment" />
+    </fragment>
+
+    <!--changes -->
+    <fragment
+        android:id="@+id/directionsFragment"
+        android:name="com.example.huntquest.ui.map.DirectionsFragment"
+        tools:layout="@layout/fragment_directions">
+        <argument
+            android:name="originLat"
+            app:argType="float" />
+        <argument
+            android:name="originLng"
+            app:argType="float" />
+        <argument
+            android:name="destLat"
+            app:argType="float" />
+        <argument
+            android:name="destLng"
+            app:argType="float" />
+    </fragment>
+
+</navigation>
