@@ -3,45 +3,105 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#E6E6E6">
+    android:background="@android:color/black">
 
     <LinearLayout
         android:orientation="vertical"
-        android:padding="24dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="16dp">
 
-        <TextView
-            android:id="@+id/tvAppTitle"
+        <!-- Card styled like your other screens -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Hunt Quest"
-            android:textStyle="bold"
-            android:textSize="28sp"
-            android:gravity="center"
-            android:paddingTop="8dp"
-            android:paddingBottom="16dp" />
+            android:background="@drawable/retro_card_bg"
+            android:padding="16dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Course: COMP-3074\nGroup: Group 20"
-            android:textSize="18sp"
-            android:paddingBottom="16dp" />
+            <TextView
+                android:id="@+id/tvAppTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hunt Quest"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:textColor="@color/hq_teal"
+                android:gravity="center"
+                android:paddingBottom="12dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Team Members:"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:paddingBottom="12dp" />
+            <TextView
+                android:id="@+id/tvCourseGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Course: COMP-3074\nGroup: Group 20"
+                android:textSize="16sp"
+                android:textColor="@android:color/white"
+                android:lineSpacingExtra="2dp"
+                android:paddingBottom="16dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="• Gia Nagpal - 101508691\n\n• Nirja Arun Dabhi - 101509539\n\n• Danuja Shankar - 101515077\n\n• Rishamnoor Kaur - 101508552"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/tvTeamHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Team Members:"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"
+                android:paddingBottom="8dp" />
 
+            <!-- Proper bulleted list (aligned) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:dividerPadding="0dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Gia Nagpal - 101508691"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/white"
+                    android:drawableStart="@drawable/bullet_teal"
+                    android:drawablePadding="10dp"
+                    android:lineSpacingExtra="2dp"
+                    android:paddingVertical="2dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nirja Arun Dabhi - 101509539"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/white"
+                    android:drawableStart="@drawable/bullet_teal"
+                    android:drawablePadding="10dp"
+                    android:lineSpacingExtra="2dp"
+                    android:paddingVertical="2dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Danuja Shankar - 101515077"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/white"
+                    android:drawableStart="@drawable/bullet_teal"
+                    android:drawablePadding="10dp"
+                    android:lineSpacingExtra="2dp"
+                    android:paddingVertical="2dp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Rishamnoor Kaur - 101508552"
+                    android:textSize="16sp"
+                    android:textColor="@android:color/white"
+                    android:drawableStart="@drawable/bullet_teal"
+                    android:drawablePadding="10dp"
+                    android:lineSpacingExtra="2dp"
+                    android:paddingVertical="2dp" />
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

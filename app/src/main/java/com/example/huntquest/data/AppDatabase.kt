@@ -10,13 +10,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+// ➕ ADD: imports for Team feature (new package)
+import com.example.huntquest.team.TeamMember
+import com.example.huntquest.team.TeamMemberDao
+
 @Database(
-    entities = [Poi::class],
-    version = 5,                      //bump version - nirja edits
+    entities = [Poi::class, TeamMember::class],
+    version = 6,                      //bump version -  edits
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun poiDao(): PoiDao
+    abstract fun teamMemberDao(): TeamMemberDao
 
     companion object {
         @Volatile private var INSTANCE: AppDatabase? = null
@@ -75,6 +80,24 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        // ➕ v5 -> v6: create TeamMember table
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `TeamMember` (
+                        `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        `fullName` TEXT NOT NULL,
+                        `phone` TEXT NOT NULL,
+                        `email` TEXT NOT NULL,
+                        `createdAt` INTEGER NOT NULL
+                    )
+                    """.trimIndent()
+                )
+            }
+        }
+
+
         fun get(context: Context): AppDatabase =
             INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
@@ -82,7 +105,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "huntquest.db"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5) // include all
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6) // include all
                     .addCallback(SeedCallback(context.applicationContext))
                     .build().also { INSTANCE = it }
             }

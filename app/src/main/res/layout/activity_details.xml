@@ -2,7 +2,6 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/hq_nav_bg"
@@ -11,50 +10,57 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:orientation="vertical">
 
-        <!-- ▓▓ Header ▓▓ -->
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/hq_purple"
             android:padding="16dp"
             android:elevation="4dp">
 
+            <ImageButton
+                android:id="@+id/back_button"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_media_previous"
+                android:padding="12dp"
+                android:contentDescription="@string/back"
+                app:tint="@android:color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
             <TextView
                 android:id="@+id/title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/details_old_mill"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"
                 android:textSize="20sp"
-                android:fontFamily="@font/press_start_2p" />
+                android:fontFamily="@font/press_start_2p"
+                android:gravity="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
                 android:id="@+id/address"
-                android:layout_below="@id/title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/address_old_mill"
                 android:textColor="#E0E0E0"
                 android:textSize="12sp"
-                android:layout_marginTop="4dp" />
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:fontFamily="@font/press_start_2p"
+                app:layout_constraintTop_toBottomOf="@id/title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <ImageButton
-                android:id="@+id/menu_button"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:layout_alignParentEnd="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_menu_more"
-                android:padding="12dp"
-                android:contentDescription="@string/more_options"
-                app:tint="@android:color/white" />
-        </RelativeLayout>
-
-        <!-- ▓▓ Task Description ▓▓ -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -109,7 +115,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <!-- ▓▓ Complete Task Button ▓▓ -->
         <Button
             android:id="@+id/complete_task"
             android:layout_width="match_parent"
@@ -125,7 +130,6 @@
             android:elevation="6dp"
             android:contentDescription="@string/mark_task_complete" />
 
-        <!-- ▓▓ Action Buttons ▓▓ -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -164,7 +168,6 @@
                 android:contentDescription="@string/share_task_details" />
         </LinearLayout>
 
-        <!-- ▓▓ Rating Section ▓▓ -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
