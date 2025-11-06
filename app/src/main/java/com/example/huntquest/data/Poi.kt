@@ -15,5 +15,8 @@ data class Poi(
     val address: String? = null,
 
     //tags for poi - nirja edits
-    val tagsCsv: String = ""
+    val tagsCsv: String = "",
+
+    // new field for task/description - risham
+    val task: String? = null
 )
