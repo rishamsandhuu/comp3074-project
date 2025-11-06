@@ -16,7 +16,7 @@ import com.example.huntquest.team.TeamMemberDao
 
 @Database(
     entities = [Poi::class, TeamMember::class],
-    version = 7,                      //bump version -  edits
+    version = 6,                      //bump version -  edits
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -105,7 +105,13 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "huntquest.db"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6) // include all
+                    .addMigrations(
+                        MIGRATION_1_2,
+                        MIGRATION_2_3,
+                        MIGRATION_3_4,
+                        MIGRATION_4_5,
+                        MIGRATION_5_6
+                    ) // include all
                     .addCallback(SeedCallback(context.applicationContext))
                     .build().also { INSTANCE = it }
             }
