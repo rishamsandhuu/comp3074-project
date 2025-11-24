@@ -24,53 +24,35 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"/>
 
-    <!-- Purple Search button -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSearch"
+    <!-- Search bar that matches the button -->
+    <EditText
+        android:id="@+id/etSearch"
         android:layout_width="0dp"
         android:layout_height="48dp"
-        android:text="@string/search"
-        android:textAllCaps="false"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/bg_rounded_purple"
+        android:hint="Search POIs"
         android:textColor="@android:color/white"
-        app:cornerRadius="24dp"
-        app:backgroundTint="@color/hq_purple"
-        app:iconTint="@android:color/white"
+        android:textColorHint="@android:color/white"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:singleLine="true"
+        android:imeOptions="actionSearch"
         app:layout_constraintTop_toBottomOf="@id/tvTitle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="12dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        tools:ignore="VisualLintButtonSize" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Search input field -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilSearch"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:hint="Search POIs"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/btnSearch"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/etSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:imeOptions="actionDone" />
-    </com.google.android.material.textfield.TextInputLayout>
+
 
     <!-- POI list -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPois"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/tilSearch"
+        app:layout_constraintTop_toBottomOf="@id/etSearch"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

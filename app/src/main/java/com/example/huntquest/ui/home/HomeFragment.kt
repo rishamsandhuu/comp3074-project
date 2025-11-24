@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.core.widget.doOnTextChanged
@@ -24,7 +25,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var rv: RecyclerView
     private lateinit var adapter: PoiAdapter
-    private lateinit var etSearch: TextInputEditText
+    private lateinit var etSearch: EditText
 
     // If HomeViewModel extends AndroidViewModel and needs Application, keep this:
     private val vm: HomeViewModel by viewModels()
@@ -74,7 +75,7 @@ class HomeFragment : Fragment() {
         }
 
         // Search button just focuses the field for now
-        v.findViewById<View>(R.id.btnSearch).setOnClickListener {
+        v.findViewById<View>(R.id.etSearch).setOnClickListener {
             etSearch.requestFocus()
         }
 
