@@ -21,76 +21,99 @@
             android:id="@+id/tvName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/place_name"
+            android:text="Place Name"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             android:textSize="16sp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tvDistance"
-            app:layout_constraintHorizontal_bias="0"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="8dp" />
 
-        <!-- Distance (right aligned) -->
+        <!-- Distance -->
         <TextView
             android:id="@+id/tvDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/_2_1_km"
+            android:text="2.1 km"
             android:textColor="@android:color/white"
             android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="@+id/tvName"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/tvName"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Opening hours (subtitle) -->
+        <!-- Opening hours -->
         <TextView
             android:id="@+id/tvHours"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/open_until_6_00_pm"
+            android:text="Open until 9:00 pm"
             android:textColor="@color/hq_text_dim"
+            android:layout_marginTop="4dp"
             app:layout_constraintTop_toBottomOf="@id/tvName"
             app:layout_constraintStart_toStartOf="@id/tvName"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="4dp" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- Button row -->
+        <!--  Rating (bottom-left) -->
+        <LinearLayout
+            android:id="@+id/ratingRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="4dp"
+            app:layout_constraintTop_toBottomOf="@id/tvHours"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/ivStar"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_star"
+                app:tint="#FFD700" />
+
+            <TextView
+                android:id="@+id/tvRating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4.5"
+                android:layout_marginStart="4dp"
+                android:textColor="#FFD700"
+                android:textStyle="bold"
+                android:textSize="14sp"  />
+        </LinearLayout>
+
+        <!-- Buttons -->
         <LinearLayout
             android:id="@+id/rowButtons"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/tvHours"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/ratingRow"
+            app:layout_constraintEnd_toEndOf="parent">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnEdit"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:text="@string/edit"
+                android:text="Edit"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 app:backgroundTint="@color/hq_purple"
-                app:cornerRadius="10dp"
-                tools:ignore="TouchTargetSizeCheck" />
+                app:cornerRadius="10dp"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnRemove"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
                 android:layout_marginStart="8dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:text="@string/remove"
+                android:text="Remove"
                 android:textAllCaps="false"
                 android:textColor="@android:color/white"
                 app:backgroundTint="@color/hq_purple"
-                app:cornerRadius="10dp"
-                tools:ignore="TouchTargetSizeCheck" />
+                app:cornerRadius="10dp"/>
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </com.google.android.material.card.MaterialCardView>

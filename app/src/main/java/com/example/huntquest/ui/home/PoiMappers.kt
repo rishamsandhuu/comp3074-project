@@ -17,6 +17,7 @@ fun Poi.toHomePoi(userLat: Double?, userLng: Double?): HomePoi {
         id = id,
         name = name,
         distanceKm = km,
-        hours = openUntil
+        hours = openUntil,
+        rating = rating
     )
 }

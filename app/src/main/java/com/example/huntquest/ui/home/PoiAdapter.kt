@@ -1,10 +1,12 @@
 package com.example.huntquest.ui.home
 
 import android.annotation.SuppressLint
+import android.media.Rating
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.fragment.app.findFragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.huntquest.R
 import java.util.Locale
@@ -22,6 +24,11 @@ class PoiAdapter(
         val tvName: TextView = v.findViewById(R.id.tvName)
         val tvDistance: TextView = v.findViewById(R.id.tvDistance)
         val tvHours: TextView = v.findViewById(R.id.tvHours)
+
+        val tvRating: TextView = v.findViewById(R.id.tvRating)
+        val ivStar: View = v.findViewById(R.id.ivStar)
+
+
         val btnEdit: View = v.findViewById(R.id.btnEdit)
         val btnRemove: View = v.findViewById(R.id.btnRemove)
     }
@@ -37,6 +44,8 @@ class PoiAdapter(
         h.tvName.text = poi.name
         h.tvDistance.text = if (poi.distanceKm > 0) String.format("%.1f km", poi.distanceKm) else ""
         h.tvHours.text = poi.hours
+
+        h.tvRating.text = String.format("%.1f", poi.rating)
 
         h.btnEdit.setOnClickListener { onEdit(poi, position) }
         h.btnRemove.setOnClickListener { onRemove(poi, position) }
