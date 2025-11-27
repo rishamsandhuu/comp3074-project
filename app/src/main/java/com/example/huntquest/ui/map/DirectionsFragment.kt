@@ -146,8 +146,13 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
         routePolyline?.remove(); routePolyline = null
         originMarker?.remove(); destMarker?.remove()
 
-        val origin = LatLng(args.originLat.toDouble(), args.originLng.toDouble())
         val dest   = LatLng(args.destLat.toDouble(),  args.destLng.toDouble())
+        var origin = LatLng(args.originLat.toDouble(), args.originLng.toDouble())
+
+        if (origin.latitude == 0.0 && origin.longitude == 0.0) {
+            origin = LatLng(43.6753, -79.4112)
+        }
+
 
         originMarker = m.addMarker(
             MarkerOptions()

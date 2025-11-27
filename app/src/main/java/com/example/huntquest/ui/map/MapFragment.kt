@@ -37,7 +37,7 @@ class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback {
     private val markerToPoi = mutableMapOf<Marker, Poi>()
 
     private val vm: PoiMapViewModel by viewModels()
-
+    
     private val fused by lazy {
         LocationServices.getFusedLocationProviderClient(requireContext())
     }

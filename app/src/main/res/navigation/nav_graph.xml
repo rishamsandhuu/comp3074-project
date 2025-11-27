@@ -43,11 +43,11 @@
         android:name="com.example.huntquest.AddMemberFragment"
         android:label="Add Member"
         tools:layout="@layout/fragment_add_member" />
-<!--    <fragment-->
-<!--        android:id="@+id/poiDetailFragment"-->
-<!--        android:name="com.example.huntquest.ActivityDetailsActivity"-->
-<!--        android:label="POI Details"-->
-<!--        tools:layout="@layout/fragment_poi_detail" />-->
+    <fragment
+        android:id="@+id/poiDetailFragment"
+        android:name="com.example.huntquest.ActivityDetailsActivity"
+        android:label="POI Details"
+        tools:layout="@layout/activity_details" />
 
     <fragment
         android:id="@+id/aboutFragment"
@@ -81,6 +81,11 @@
             android:name="poi"
             app:argType="com.google.android.gms.maps.model.LatLng"
             app:nullable="true" />
+
+        <!-- single argument with POI Id -->
+        <argument
+            android:name="poiId"
+            app:argType="long" />
 
         <action
             android:id="@+id/action_map_to_directions"

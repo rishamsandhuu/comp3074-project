@@ -80,6 +80,26 @@ class ActivityDetailsActivity : AppCompatActivity() {
             }
         }
 
+        // --- Directions (Google Maps Navigation inside app) ---
+        btnDirections.setOnClickListener {
+            val poi = loadedPoi ?: return@setOnClickListener
+            val lat = poi.latitude ?: return@setOnClickListener
+            val lng = poi.longitude ?: return@setOnClickListener
+
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("navigate_to_directions_lat", lat)
+            intent.putExtra("navigate_to_directions_lng", lng)
+            startActivity(intent)
+        }
+
+        // --- Map button (open MapFragment focusing POI) ---
+        btnMap.setOnClickListener {
+            val poi = loadedPoi ?: return@setOnClickListener
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("open_map_single", poi.id)
+            startActivity(intent)
+        }
+
         // --- Complete Task ---
         btnComplete.setOnClickListener {
             val poi = loadedPoi ?: return@setOnClickListener

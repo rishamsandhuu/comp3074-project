@@ -42,6 +42,27 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHost.navController
 
+        // Handle Intents from ActivityDetailsActivity
+        intent?.let {
+            when {
+                it.hasExtra("open_map_single") -> {
+                    val poiId = it.getLongExtra("open_map_single", -1)
+                    if (poiId != -1L) {
+                        val bundle = Bundle().apply { putLong("poiId", poiId) }
+                        navController.navigate(R.id.mapFragment, bundle)
+                    }
+                }
+
+                it.hasExtra("open_directions_single") -> {
+                    val poiId = it.getLongExtra("open_directions_single", -1)
+                    if (poiId != -1L) {
+                        val bundle = Bundle().apply { putLong("destPoiId", poiId) }
+                        navController.navigate(R.id.directionsFragment, bundle)
+                    }
+                }
+            }
+        }
+
         // Add this once, near where toolbar is initialized
         toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
@@ -112,6 +133,31 @@ class MainActivity : AppCompatActivity() {
                     toolbar.menu.clear() // hide the "i" on About screen
                 }
             }
+        }
+
+        // --- Open MapFragment focusing a specific POI ---
+        val mapPoiId = intent.getLongExtra("navigate_to_map_poi", -1)
+        if (mapPoiId != -1L) {
+            navController.navigate(
+                R.id.mapFragment,
+                Bundle().apply { putLong("poiId", mapPoiId) }
+            )
+        }
+
+        // --- Open DirectionsFragment with coordinates ---
+        val destLat = intent.getDoubleExtra("navigate_to_directions_lat", 0.0)
+        val destLng = intent.getDoubleExtra("navigate_to_directions_lng", 0.0)
+
+        if (destLat != 0.0 && destLng != 0.0) {
+            navController.navigate(
+                R.id.directionsFragment,
+                Bundle().apply {
+                    putFloat("originLat", 0f)   // optional, can update later using GPS
+                    putFloat("originLng", 0f)
+                    putFloat("destLat", destLat.toFloat())
+                    putFloat("destLng", destLng.toFloat())
+                }
+            )
         }
 
         // System back: if not on Home, go to Home; else default back (exit)
