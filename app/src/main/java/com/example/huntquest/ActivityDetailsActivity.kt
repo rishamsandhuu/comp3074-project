@@ -101,6 +101,22 @@ class ActivityDetailsActivity : AppCompatActivity() {
                 ).show()
             }
         }
+        // --- Submit Rating ---
+        btnSubmitRating.setOnClickListener {
+            val poi = loadedPoi ?: return@setOnClickListener
+            val newRating = ratingBar.rating
 
+            lifecycleScope.launch {
+                val repo = PoiRepository.get(this@ActivityDetailsActivity)
+                poi.rating = newRating
+                repo.upsert(poi)
+
+                Toast.makeText(
+                    this@ActivityDetailsActivity,
+                    "Rating submitted!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
     }
+}
 }
