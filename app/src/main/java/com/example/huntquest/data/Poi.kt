@@ -5,18 +5,21 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "POIs")
 data class Poi(
-    @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val name: String,
-    val openUntil: String,       // e.g., "Open until 10:00 pm"
-    val latitude: Double? = null,
-    val longitude: Double? = null,
-    // new fields
-    val rating: Float = 0f,
-    val address: String? = null,
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
 
-    //tags for poi - nirja edits
-    val tagsCsv: String = "",
+    var name: String,
+    var openUntil: String,
+    var latitude: Double? = null,
+    var longitude: Double? = null,
 
-    // new field for task/description - risham
-    val task: String? = null
+    // mutable fields
+    var rating: Float = 0f,
+    var address: String? = null,
+
+    // tags for poi
+    var tagsCsv: String = "",
+
+    // description / task
+    var task: String? = null
 )

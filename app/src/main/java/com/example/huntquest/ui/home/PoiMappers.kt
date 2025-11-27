@@ -8,11 +8,16 @@ import com.example.huntquest.data.Poi
  * If user or POI coords are missing, distance = 0.0 (we hide it in the adapter).
  */
 fun Poi.toHomePoi(userLat: Double?, userLng: Double?): HomePoi {
-    val km = if (userLat != null && userLng != null && latitude != null && longitude != null) {
+
+    val lat = latitude
+    val lng = longitude
+
+    val km = if (userLat != null && userLng != null && lat != null && lng != null) {
         val out = FloatArray(1)
-        Location.distanceBetween(userLat, userLng, latitude, longitude, out)
+        Location.distanceBetween(userLat, userLng, lat, lng, out)
         out[0] / 1000.0
     } else 0.0
+
     return HomePoi(
         id = id,
         name = name,
@@ -21,3 +26,4 @@ fun Poi.toHomePoi(userLat: Double?, userLng: Double?): HomePoi {
         rating = rating
     )
 }
+
