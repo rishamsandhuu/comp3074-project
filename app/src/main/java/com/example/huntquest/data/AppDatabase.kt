@@ -15,7 +15,7 @@ import com.example.huntquest.team.TeamMemberDao
 
 @Database(
     entities = [Poi::class, TeamMember::class],
-    version = 7,                      // current schema version
+    version = 8,                      // current schema version
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -93,10 +93,12 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
-        /** OPTIONAL if needed:
-         * MIGRATION_6_7 can be empty since schema updates are handled destructively
-         * when fallbackToDestructiveMigration() is used.
-         */
+        //Adding 'completed' field to POI model
+        private val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE POIs ADD COLUMN completed INTEGER NOT NULL DEFAULT 0")
+            }
+        }
 
         fun get(context: Context): AppDatabase =
             INSTANCE ?: synchronized(this) {
@@ -111,9 +113,10 @@ abstract class AppDatabase : RoomDatabase() {
                         MIGRATION_2_3,
                         MIGRATION_3_4,
                         MIGRATION_4_5,
-                        MIGRATION_5_6
+                        MIGRATION_5_6,
+                        MIGRATION_7_8
                     )
-                    // *** THE FIX: deletes old DB if version mismatch, prevents crashes ***
+
                     .fallbackToDestructiveMigration()
                     .addCallback(SeedCallback(context.applicationContext))
                     .build()

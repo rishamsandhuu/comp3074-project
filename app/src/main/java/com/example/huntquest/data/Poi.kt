@@ -21,5 +21,7 @@ data class Poi(
     var tagsCsv: String = "",
 
     // description / task
-    var task: String? = null
+    var task: String? = null,
+
+    var completed: Boolean = false     // new field
 )
