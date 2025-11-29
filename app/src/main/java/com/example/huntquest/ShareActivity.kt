@@ -1,11 +1,13 @@
 package com.example.huntquest
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -13,6 +15,7 @@ class ShareBottomSheet : BottomSheetDialogFragment() {
 
     private lateinit var shareText: String
 
+    @SuppressLint("SetTextI18n")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -20,19 +23,19 @@ class ShareBottomSheet : BottomSheetDialogFragment() {
     ): View {
         val view = inflater.inflate(R.layout.activity_share, container, false)
 
-        // --- RECEIVE DATA FROM ActivityDetailsActivity ---
+        //RECEIVE DATA
         val name = arguments?.getString("poi_name") ?: "Unknown Location"
         val address = arguments?.getString("poi_address") ?: "Address unavailable"
         val task = arguments?.getString("poi_task") ?: "No task available"
         val tags = arguments?.getString("poi_tags") ?: "#huntquest"
 
-        // --- SET UI TEXTS ---
+        //UI TEXT
         view.findViewById<TextView>(R.id.tvName).text = "Name: $name"
         view.findViewById<TextView>(R.id.tvAddress).text = "Address: $address"
         view.findViewById<TextView>(R.id.tvTask).text = "Task: $task"
         view.findViewById<TextView>(R.id.tvTags).text = tags
 
-        // --- SHARE TEXT ---
+        //SHARE TEXT
         shareText = """
             Check out this HuntQuest challenge!
 
@@ -48,24 +51,17 @@ class ShareBottomSheet : BottomSheetDialogFragment() {
             https://example.com
         """.trimIndent()
 
-        // --- SOCIAL SHARE BUTTONS ---
-        view.findViewById<Button>(R.id.btnFacebook).setOnClickListener {
-            shareTo("com.facebook.katana")
-        }
+        val fb  = view.findViewById<ImageButton>(R.id.btnFacebook)
+        val ig  = view.findViewById<ImageButton>(R.id.btnInstagram)
+        val tw  = view.findViewById<ImageButton>(R.id.btnTwitter)
+        val em  = view.findViewById<ImageButton>(R.id.btnEmail)
 
-        view.findViewById<Button>(R.id.btnInstagram).setOnClickListener {
-            shareTo("com.instagram.android")
-        }
+        fb.setOnClickListener { shareTo("com.facebook.katana") }
+        ig.setOnClickListener { shareTo("com.instagram.android") }
+        tw.setOnClickListener { shareTo("com.twitter.android") }
+        em.setOnClickListener { shareEmail() }
 
-        view.findViewById<Button>(R.id.btnTwitter).setOnClickListener {
-            shareTo("com.twitter.android")
-        }
-
-        view.findViewById<Button>(R.id.btnEmail).setOnClickListener {
-            shareEmail()
-        }
-
-        // --- CLOSE BUTTON ---
+        // Close
         view.findViewById<Button>(R.id.back_button).setOnClickListener {
             dismiss()
         }
@@ -73,22 +69,15 @@ class ShareBottomSheet : BottomSheetDialogFragment() {
         return view
     }
 
-
-    // ---------------------------------------------------------
-    // SHARE HELPERS
-    // ---------------------------------------------------------
-
     private fun shareTo(packageName: String) {
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, shareText)
             setPackage(packageName)
         }
-
         try {
             startActivity(intent)
         } catch (e: Exception) {
-            // App not installed → fallback
             startActivity(
                 Intent.createChooser(
                     Intent(Intent.ACTION_SEND).apply {
@@ -107,7 +96,6 @@ class ShareBottomSheet : BottomSheetDialogFragment() {
             putExtra(Intent.EXTRA_SUBJECT, "HuntQuest Location")
             putExtra(Intent.EXTRA_TEXT, shareText)
         }
-
         startActivity(Intent.createChooser(emailIntent, "Send email"))
     }
 }

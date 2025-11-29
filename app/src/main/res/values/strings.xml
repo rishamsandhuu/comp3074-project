@@ -94,5 +94,12 @@
     <string name="title_map">Map</string>
     <string name="share_icon">Share options</string>
     <string name="back_button">Back</string>
+    <string name="share_task">Share Task</string>
+    <string name="share_via">Share via</string>
+    <string name="close">CLOSE</string>
 
+    <string name="share_facebook">Share via Facebook</string>
+    <string name="share_instagram">Share via Instagram</string>
+    <string name="share_twitter">Share via Twitter</string>
+    <string name="share_email">Share via Email</string>
 </resources>

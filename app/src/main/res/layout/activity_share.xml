@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/hq_nav_bg"
@@ -23,10 +24,11 @@
                 android:id="@+id/section_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Share Task"
+                android:text="@string/share_task"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:ignore="RelativeOverlap" />
 
             <ImageButton
                 android:id="@+id/menu_button"
@@ -85,7 +87,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Share via"
+            android:text="@string/share_via"
             android:textColor="@color/hq_teal"
             android:textStyle="bold"
             android:textSize="16sp"
@@ -97,48 +99,57 @@
             android:orientation="horizontal"
             android:gravity="center">
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnFacebook"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:text="F"
-                android:textColor="@android:color/white"
-                android:backgroundTint="@color/hq_teal" />
+                android:src="@drawable/ic_facebook"
+                android:backgroundTint="@color/hq_teal"
+                android:background="@drawable/rounded_icon_bg"
+                android:padding="12dp"
+                android:contentDescription="@string/share_facebook" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnInstagram"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:text="I"
-                android:textColor="@android:color/white"
+                android:layout_marginStart="12dp"
+                android:src="@drawable/ic_instagram"
                 android:backgroundTint="@color/hq_pink"
-                android:layout_marginStart="10dp" />
+                android:background="@drawable/rounded_icon_bg"
+                android:padding="12dp"
+                android:contentDescription="@string/share_instagram" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnTwitter"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:text="T"
-                android:textColor="@android:color/white"
+                android:layout_marginStart="12dp"
+                android:src="@drawable/ic_twitter"
                 android:backgroundTint="@color/hq_purple"
-                android:layout_marginStart="10dp" />
+                android:background="@drawable/rounded_icon_bg"
+                android:padding="12dp"
+                android:contentDescription="@string/share_twitter" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnEmail"
                 android:layout_width="56dp"
                 android:layout_height="56dp"
-                android:text="E"
-                android:textColor="@android:color/white"
+                android:layout_marginStart="12dp"
+                android:src="@drawable/ic_email"
                 android:backgroundTint="@color/hq_teal"
-                android:layout_marginStart="10dp" />
+                android:background="@drawable/rounded_icon_bg"
+                android:padding="12dp"
+                android:contentDescription="@string/share_email" />
         </LinearLayout>
+
 
         <!-- Close button -->
         <Button
             android:id="@+id/back_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="CLOSE"
+            android:text="@string/close"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:backgroundTint="@color/hq_purple"
