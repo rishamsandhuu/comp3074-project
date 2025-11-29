@@ -121,6 +121,23 @@ class ActivityDetailsActivity : AppCompatActivity() {
                 ).show()
             }
         }
+        // Share POI
+        btnShare.setOnClickListener {
+            val poi = loadedPoi ?: return@setOnClickListener
+
+            val sheet = ShareBottomSheet().apply {
+                arguments = Bundle().apply {
+                    putString("poi_name", poi.name)
+                    putString("poi_address", poi.address)
+                    putString("poi_task", poi.task)
+                    putString("poi_tags", poi.tagsCsv)
+                }
+            }
+
+            sheet.show(supportFragmentManager, "share_sheet")
+        }
+
+
         // --- Submit Rating ---
         btnSubmitRating.setOnClickListener {
             val poi = loadedPoi ?: return@setOnClickListener
