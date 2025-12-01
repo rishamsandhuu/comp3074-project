@@ -1,6 +1,7 @@
 package com.example.huntquest.ui.map
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
@@ -11,9 +12,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
+import com.example.huntquest.ActivityDetailsActivity
 import com.example.huntquest.R
 import com.example.huntquest.data.Poi
 import com.example.huntquest.databinding.FragmentMapBinding
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -23,8 +27,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import kotlinx.coroutines.launch
-import androidx.navigation.fragment.findNavController
-import com.google.android.gms.location.LocationServices
 
 class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback {
 
@@ -33,70 +35,88 @@ class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback {
 
     private var map: GoogleMap? = null
     private val markerToPoi = mutableMapOf<Marker, Poi>()
-
     private val vm: PoiMapViewModel by viewModels()
-    
+
+    private var latestPois: List<Poi> = emptyList()
+
+    // If launched from details screen, shows single POI
+    private var focusedPoiId: Long? = null
+
     private val fused by lazy {
         LocationServices.getFusedLocationProviderClient(requireContext())
     }
 
-    private val reqLocationPermission = registerForActivityResult(
-        ActivityResultContracts.RequestPermission()
-    ) { granted ->
-        if (granted) enableMyLocationIfPermitted()
-    }
+    // Request both fine + coarse location permissions
+    private val reqLocationPermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
+            val fine = result[Manifest.permission.ACCESS_FINE_LOCATION] == true
+            val coarse = result[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+            if (fine || coarse) {
+                enableMyLocationIfPermitted()
+            }
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _vb = FragmentMapBinding.bind(view)
 
+        // Read optional POI id passed from MainActivity (when coming from details screen)
+        focusedPoiId = arguments?.getLong("poiId", -1L)?.takeIf { it != -1L }
+
         // Map init
         (childFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment)
             .getMapAsync(this)
 
-        // Start hidden
         vb.cardPoi.visibility = View.GONE
 
-        // Observe POIs from DB → draw markers
+        // Observe POIs from DB → draw markers when map is ready
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                vm.pois.collect { list -> drawMarkers(list) }
+                vm.pois.collect { list ->
+                    latestPois = list
+                    map?.let { drawMarkers(list) }
+                    focusPoiIfNeeded()
+                }
             }
         }
 
-        // Card actions
+        // Card: Details → open ActivityDetailsActivity for this POI
         vb.btnDetails.setOnClickListener {
             val poi = vb.cardPoi.tag as? Poi ?: return@setOnClickListener
-            // TODO: navigate to your POI details screen (SafeArgs)
-            // findNavController().navigate(MapFragmentDirections.actionMapToPoiDetail(poi.id))
+            startActivity(
+                Intent(requireContext(), ActivityDetailsActivity::class.java)
+                    .putExtra("poi_id", poi.id)
+            )
         }
+
+        // Card: Directions → open DirectionsFragment with origin and dest
         vb.btnDirections.setOnClickListener {
             val poi = vb.cardPoi.tag as? Poi ?: return@setOnClickListener
             val destLat = poi.latitude ?: return@setOnClickListener
             val destLng = poi.longitude ?: return@setOnClickListener
 
-            fun navigateWith(origin: com.google.android.gms.maps.model.LatLng) {
+            fun navigateWith(origin: LatLng) {
                 val action = MapFragmentDirections.actionMapToDirections(
                     originLat = origin.latitude.toFloat(),
                     originLng = origin.longitude.toFloat(),
-                    destLat   = destLat.toFloat(),
-                    destLng   = destLng.toFloat()
+                    destLat = destLat.toFloat(),
+                    destLng = destLng.toFloat()
                 )
                 findNavController().navigate(action)
             }
 
-            // 1) Explicit permission check
+            // Permission check
             val fineGranted = ContextCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
 
             val coarseGranted = ContextCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION
+                requireContext(),
+                Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
 
             if (!fineGranted && !coarseGranted) {
-                // If you already have an Activity Result launcher, use it; otherwise request directly:
-                // If you have: reqLocationPermissions.launch(arrayOf(...))
                 reqLocationPermissions.launch(
                     arrayOf(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -106,34 +126,27 @@ class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback {
                 return@setOnClickListener
             }
 
-            // 2) We have permission → try lastLocation, handle SecurityException defensively
+            // If permission granted → try lastLocation
             try {
                 fused.lastLocation
                     .addOnSuccessListener { loc ->
                         val origin = if (loc != null) {
-                            com.google.android.gms.maps.model.LatLng(loc.latitude, loc.longitude)
+                            LatLng(loc.latitude, loc.longitude)
                         } else {
-                            // Fallback: camera center or destination if camera is null
-                            map?.cameraPosition?.target
-                                ?: com.google.android.gms.maps.model.LatLng(destLat, destLng)
+                            // Fallback: camera center or destination
+                            map?.cameraPosition?.target ?: LatLng(destLat, destLng)
                         }
                         navigateWith(origin)
                     }
                     .addOnFailureListener {
-                        // Fallback: camera center or destination
-                        val origin = map?.cameraPosition?.target
-                            ?: com.google.android.gms.maps.model.LatLng(destLat, destLng)
+                        val origin = map?.cameraPosition?.target ?: LatLng(destLat, destLng)
                         navigateWith(origin)
                     }
             } catch (se: SecurityException) {
-                // Shouldn't happen after our check, but guard anyway
-                val origin = map?.cameraPosition?.target
-                    ?: com.google.android.gms.maps.model.LatLng(destLat, destLng)
+                val origin = map?.cameraPosition?.target ?: LatLng(destLat, destLng)
                 navigateWith(origin)
             }
         }
-
-
     }
 
     override fun onDestroyView() {
@@ -144,18 +157,29 @@ class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
 
-        // Style: if you have dark mode support, you can load a raw style here; or leave default.
         map?.uiSettings?.isMapToolbarEnabled = false
-        map?.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(43.6532, -79.3832), 11f)) // Toronto
+        map?.moveCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                LatLng(43.6532, -79.3832), // Toronto
+                11f
+            )
+        )
 
         map?.setOnMarkerClickListener { marker ->
             markerToPoi[marker]?.let { showCard(it) }
-            true // consume (we're using our own card, not InfoWindow)
+            true
         }
 
-        map?.setOnMapClickListener { vb.cardPoi.visibility = View.GONE }
+        map?.setOnMapClickListener {
+            vb.cardPoi.visibility = View.GONE
+        }
 
         enableMyLocationIfPermitted()
+
+        if (latestPois.isNotEmpty()) {
+            drawMarkers(latestPois)
+            focusPoiIfNeeded()
+        }
     }
 
     private fun drawMarkers(pois: List<Poi>) {
@@ -170,7 +194,11 @@ class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback {
                 MarkerOptions()
                     .position(LatLng(lat, lng))
                     .title(p.name)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                    .icon(
+                        BitmapDescriptorFactory.defaultMarker(
+                            BitmapDescriptorFactory.HUE_AZURE
+                        )
+                    )
             )
             if (marker != null) {
                 marker.tag = p.id
@@ -188,21 +216,30 @@ class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback {
         vb.cardPoi.visibility = View.VISIBLE
     }
 
-    private val reqLocationPermissions =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
-            val fine = result[Manifest.permission.ACCESS_FINE_LOCATION] == true
-            val coarse = result[Manifest.permission.ACCESS_COARSE_LOCATION] == true
-            if (fine || coarse) enableMyLocationIfPermitted()
+    private fun focusPoiIfNeeded() {
+        val id = focusedPoiId ?: return
+        val gmap = map ?: return
 
-        }
+        val target = latestPois.firstOrNull { it.id == id } ?: return
+        val lat = target.latitude ?: return
+        val lng = target.longitude ?: return
+
+        val pos = LatLng(lat, lng)
+        gmap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 15f))
+        showCard(target)
+
+        focusedPoiId = null
+    }
 
     private fun hasLocationPermission(): Boolean {
         val ctx = requireContext()
         val fine = ContextCompat.checkSelfPermission(
-            ctx, Manifest.permission.ACCESS_FINE_LOCATION
+            ctx,
+            Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
         val coarse = ContextCompat.checkSelfPermission(
-            ctx, Manifest.permission.ACCESS_COARSE_LOCATION
+            ctx,
+            Manifest.permission.ACCESS_COARSE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
         return fine || coarse
     }
@@ -212,8 +249,7 @@ class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback {
         if (hasLocationPermission()) {
             try {
                 gmap.isMyLocationEnabled = true
-            } catch (se: SecurityException) {
-
+            } catch (_: SecurityException) {
             }
         } else {
             reqLocationPermissions.launch(
