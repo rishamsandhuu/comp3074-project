@@ -26,9 +26,15 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         userLng.value = lng
     }
 
-    fun addPoi(name: String, rating: Float, address: String?, tagCsv: String) {
+    fun addPoi(
+        name: String,
+        rating: Float,
+        address: String?,
+        tagCsv: String,
+        task: String
+    ) {
         viewModelScope.launch {
-            repo.addPoi(name, rating, address, tagCsv)
+            repo.addPoi(name, rating, address, tagCsv, task)
         }
     }
 
@@ -39,7 +45,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
         address: String?,
         tagCsv: String,
         latitude: Double?,
-        longitude: Double?
+        longitude: Double?,
+        task: String
     ) {
         viewModelScope.launch {
             repo.updatePoi(
@@ -49,7 +56,8 @@ class HomeViewModel(app: Application) : AndroidViewModel(app) {
                 address = address,
                 tagsCsv = tagCsv,
                 latitude = latitude,
-                longitude = longitude
+                longitude = longitude,
+                task = task
             )
         }
     }

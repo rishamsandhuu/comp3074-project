@@ -1,7 +1,5 @@
-
 package com.example.huntquest
 
-import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,7 +15,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.room.util.query
 import com.example.huntquest.ui.home.HomeViewModel
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.AutocompletePrediction
@@ -60,6 +57,7 @@ class AddPoiFragment : Fragment() {
 
         val etName: EditText = v.findViewById(R.id.etName)
         etAddress = v.findViewById(R.id.etAddress)
+        val etTask: EditText = v.findViewById(R.id.etTask)
         val ratingBar: RatingBar = v.findViewById(R.id.ratingBar)
         val chipGroup: ChipGroup = v.findViewById(R.id.chipGroupTags)
         val btnSave: MaterialButton = v.findViewById(R.id.btnSave)
@@ -67,8 +65,8 @@ class AddPoiFragment : Fragment() {
 
         ratingBar.rating = 0f
 
-        //initializing places using api key
-        if(!Places.isInitialized()) {
+        // initializing Places using API key
+        if (!Places.isInitialized()) {
             val appInfo = requireContext().packageManager.getApplicationInfo(
                 requireContext().packageName,
                 PackageManager.GET_META_DATA
@@ -78,7 +76,7 @@ class AddPoiFragment : Fragment() {
         }
         placesClient = Places.createClient(requireContext())
 
-        //inline autocomplete
+        // Inline autocomplete for address
         etAddress.addTextChangedListener { text ->
             val query = text?.toString()?.trim().orEmpty()
 
@@ -86,13 +84,13 @@ class AddPoiFragment : Fragment() {
             selectedLongitude = null
 
             queryJob?.cancel()
-            if(query.isEmpty()){
+            if (query.isEmpty()) {
                 (etAddress as? android.widget.AutoCompleteTextView)?.setAdapter(null)
                 return@addTextChangedListener
             }
 
             queryJob = viewLifecycleOwner.lifecycleScope.launch {
-                delay(250) //debounce
+                delay(250) // debounce
 
                 val request = FindAutocompletePredictionsRequest.builder()
                     .setSessionToken(sessionToken)
@@ -103,8 +101,11 @@ class AddPoiFragment : Fragment() {
                     .addOnSuccessListener { response ->
                         predictions = response.autocompletePredictions
                         val items = predictions.map { it.getFullText(null).toString() }
-                        val adapter = ArrayAdapter(requireContext(),
-                            android.R.layout.simple_dropdown_item_1line, items)
+                        val adapter = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_dropdown_item_1line,
+                            items
+                        )
                         (etAddress as android.widget.AutoCompleteTextView).setAdapter(adapter)
                         (etAddress as android.widget.AutoCompleteTextView).showDropDown()
                     }
@@ -112,7 +113,6 @@ class AddPoiFragment : Fragment() {
                         // ignore quietly
                     }
             }
-
         }
 
         (etAddress as android.widget.AutoCompleteTextView).setOnItemClickListener { _, _, position, _ ->
@@ -139,9 +139,10 @@ class AddPoiFragment : Fragment() {
             val name = etName.text.toString().trim()
             val address: String? = etAddress.text.toString().trim().ifEmpty { null }
             val rating = ratingBar.rating
+            val task = etTask.text.toString().trim()  // 👈 NEW
 
             val selectedTags = mutableListOf<String>()
-            for (i in 0 until chipGroup.childCount){
+            for (i in 0 until chipGroup.childCount) {
                 val chip = chipGroup.getChildAt(i) as Chip
                 if (chip.isChecked) selectedTags += chip.text.toString()
             }
@@ -157,7 +158,8 @@ class AddPoiFragment : Fragment() {
                 name = name,
                 rating = rating,
                 address = address,
-                tagCsv = tagsCsv
+                tagCsv = tagsCsv,
+                task = task
             )
 
             Snackbar.make(v, "POI saved successfully", Snackbar.LENGTH_SHORT).show()
@@ -171,5 +173,3 @@ class AddPoiFragment : Fragment() {
         return v
     }
 }
-
-

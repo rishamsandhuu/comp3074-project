@@ -16,26 +16,32 @@ class PoiRepository(private val context: Context)  {
     suspend fun getById(id: Long) = dao.getById(id)
     fun observeById(id: Long): Flow<Poi?> = dao.observeById(id)
 
-    //geocoding an address: Pair<lat, lon>
+    // geocoding an address: Pair<lat, lon>
     @Suppress("DEPRECATION")
     private suspend fun geocode(address: String): Pair<Double, Double>? = withContext(Dispatchers.IO) {
         try {
             val geocoder = Geocoder(context, Locale.getDefault())
             val res = geocoder.getFromLocationName(address, 1)
-            if(!res.isNullOrEmpty()) {
+            if (!res.isNullOrEmpty()) {
                 val a = res.first()
                 return@withContext a.latitude to a.longitude
             }
             null
-        } catch (_: Exception){
+        } catch (_: Exception) {
             null
         }
     }
 
     // Add with address string
-    suspend fun addPoi(name: String, rating: Float, address: String?, tagsCsv: String) {
+    suspend fun addPoi(
+        name: String,
+        rating: Float,
+        address: String?,
+        tagsCsv: String,
+        task: String        // 👈 new param
+    ) {
         val latLng: Pair<Double, Double>? =
-            if(!address.isNullOrBlank()) geocode(address) else null
+            if (!address.isNullOrBlank()) geocode(address) else null
 
         dao.upsert(
             Poi(
@@ -45,32 +51,45 @@ class PoiRepository(private val context: Context)  {
                 address = address,
                 latitude = latLng?.first,
                 longitude = latLng?.second,
-                tagsCsv = tagsCsv
+                tagsCsv = tagsCsv,
+                task = task     // 👈 store task
             )
         )
     }
 
     // Update name/rating/address of an existing poi
-    suspend fun updatePoi(poiId: Long, name: String, rating: Float, address: String?, tagsCsv: String, latitude: Double?, longitude: Double?) {
+    suspend fun updatePoi(
+        poiId: Long,
+        name: String,
+        rating: Float,
+        address: String?,
+        tagsCsv: String,
+        latitude: Double?,
+        longitude: Double?,
+        task: String        // 👈 new param
+    ) {
         val existing = dao.getById(poiId) ?: return
 
         val addressChanged = existing.address != address
         val latLonIfChanged: Pair<Double, Double>? =
             if (addressChanged && !address.isNullOrBlank()) geocode(address) else null
 
-        dao.upsert(existing.copy(
-            name = name,
-            rating = rating,
-            address = address,
-            tagsCsv = tagsCsv,
-            latitude = if (addressChanged) latLonIfChanged?.first else existing.latitude,
-            longitude = if (addressChanged) latLonIfChanged?.second else existing.longitude
-
-        ))
+        dao.upsert(
+            existing.copy(
+                name = name,
+                rating = rating,
+                address = address,
+                tagsCsv = tagsCsv,
+                latitude = if (addressChanged) latLonIfChanged?.first else existing.latitude,
+                longitude = if (addressChanged) latLonIfChanged?.second else existing.longitude,
+                task = task     // 👈 update task
+            )
+        )
     }
 
     fun allWithCoordinates(): Flow<List<Poi>> =
         dao.getAll().map { list -> list.filter { it.latitude != null && it.longitude != null } }
+
     companion object {
         @Volatile private var INSTANCE: PoiRepository? = null
         fun get(context: Context): PoiRepository =

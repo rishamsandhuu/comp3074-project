@@ -37,6 +37,7 @@ class EditPoiFragment : Fragment() {
 
     private lateinit var etName: EditText
     private lateinit var etAddress: MaterialAutoCompleteTextView
+    private lateinit var etTask: EditText
     private lateinit var ratingBar: RatingBar
     private lateinit var chipGroup: ChipGroup
     private lateinit var btnSave: MaterialButton
@@ -65,11 +66,16 @@ class EditPoiFragment : Fragment() {
         placesClient = Places.createClient(requireContext())
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         val v = inflater.inflate(R.layout.fragment_edit_poi, container, false)
 
         etName = v.findViewById(R.id.etName)
         etAddress = v.findViewById(R.id.etAddress)
+        etTask = v.findViewById(R.id.etTask)
         ratingBar = v.findViewById(R.id.ratingBar)
         chipGroup = v.findViewById(R.id.chipGroupTags)
         btnSave = v.findViewById(R.id.btnSave)
@@ -80,6 +86,7 @@ class EditPoiFragment : Fragment() {
             poi ?: return@observe
             etName.setText(poi.name)
             etAddress.setText(poi.address.orEmpty())
+            etTask.setText(poi.task.orEmpty())
             ratingBar.rating = poi.rating
             selectedLat = poi.latitude
             selectedLon = poi.longitude
@@ -103,7 +110,11 @@ class EditPoiFragment : Fragment() {
     }
 
     private fun setupAddressAutocomplete() {
-        adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, mutableListOf())
+        adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_dropdown_item_1line,
+            mutableListOf()
+        )
         etAddress.setAdapter(adapter)
 
         etAddress.addTextChangedListener { text ->
@@ -151,7 +162,8 @@ class EditPoiFragment : Fragment() {
                     selectedLon = place.latLng?.longitude
                 }
                 .addOnFailureListener {
-                    Snackbar.make(etAddress, "Failed to fetch place details", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(etAddress, "Failed to fetch place details", Snackbar.LENGTH_SHORT)
+                        .show()
                 }
         }
     }
@@ -161,6 +173,7 @@ class EditPoiFragment : Fragment() {
             val name = etName.text.toString().trim()
             val address = etAddress.text.toString().trim().ifEmpty { null }
             val rating = ratingBar.rating
+            val task = etTask.text.toString().trim()
 
             val tagsCsv = buildList {
                 for (i in 0 until chipGroup.childCount) {
@@ -184,8 +197,9 @@ class EditPoiFragment : Fragment() {
                 rating = rating,
                 address = address,
                 tagCsv = tagsCsv,
-                latitude = selectedLat,        // may be null if user didn't change address
-                longitude = selectedLon
+                latitude = selectedLat,
+                longitude = selectedLon,
+                task = task
             )
 
             Snackbar.make(root, "POI updated", Snackbar.LENGTH_SHORT).show()

@@ -103,4 +103,8 @@
     <string name="share_twitter">Share via Twitter</string>
     <string name="share_email">Share via Email</string>
     <string name="fullscreen_map">Full Screen</string>
+    <string name="add_team_member">Add team member</string>
+    <string name="phone">Phone</string>
+    <string name="email">Email</string>
+    <string name="full_name">Full name</string>
 </resources>
