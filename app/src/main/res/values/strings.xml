@@ -102,4 +102,5 @@
     <string name="share_instagram">Share via Instagram</string>
     <string name="share_twitter">Share via Twitter</string>
     <string name="share_email">Share via Email</string>
+    <string name="fullscreen_map">Full Screen</string>
 </resources>

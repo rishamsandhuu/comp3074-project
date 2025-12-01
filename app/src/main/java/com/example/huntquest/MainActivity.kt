@@ -2,6 +2,7 @@ package com.example.huntquest
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -15,6 +16,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
+
+    private var isMapFullscreen = false
+
+    fun setMapFullscreen(fullscreen: Boolean) {
+        isMapFullscreen = fullscreen
+        val bottomNav: BottomNavigationView = findViewById(R.id.bottomNav)
+        bottomNav.visibility = if (fullscreen) View.GONE else View.VISIBLE
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_HuntQuest)
@@ -57,10 +66,13 @@ class MainActivity : AppCompatActivity() {
 
         NavigationUI.setupWithNavController(bottomNav, navController)
 
-        // Update the top bar title + back arrow based on destination
+
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
+
                 R.id.homeFragment -> {
+                    setMapFullscreen(false)
+
                     toolbar.title = "Home"
                     toolbar.navigationIcon = null
                     toolbar.menu.clear()
@@ -71,12 +83,18 @@ class MainActivity : AppCompatActivity() {
                     toolbar.title = "MAPS"
                     toolbar.setNavigationIcon(R.drawable.huntquest_arrow_back)
                     toolbar.setNavigationOnClickListener {
-                        navController.navigate(R.id.homeFragment)
+                        if (isMapFullscreen) {
+                            setMapFullscreen(false)
+                        } else {
+                            navController.navigate(R.id.homeFragment)
+                        }
                     }
                     toolbar.menu.clear()
                 }
 
                 R.id.teamFragment -> {
+                    setMapFullscreen(false)
+
                     toolbar.title = "Team"
                     toolbar.setNavigationIcon(R.drawable.huntquest_arrow_back)
                     toolbar.setNavigationOnClickListener {
@@ -86,16 +104,19 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.directionsFragment -> {
+                    setMapFullscreen(false)
+
                     toolbar.title = "Directions"
                     toolbar.setNavigationIcon(R.drawable.huntquest_arrow_back)
                     toolbar.setNavigationOnClickListener {
                         navController.navigate(R.id.mapFragment)
                     }
                     toolbar.menu.clear()
-                    bottomNav.visibility = BottomNavigationView.VISIBLE
                 }
 
                 R.id.aboutFragment -> {
+                    setMapFullscreen(false)
+
                     toolbar.title = "About"
                     toolbar.setNavigationIcon(R.drawable.huntquest_arrow_back)
                     toolbar.setNavigationOnClickListener {
@@ -105,6 +126,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
 
 
         onBackPressedDispatcher.addCallback(this) {
