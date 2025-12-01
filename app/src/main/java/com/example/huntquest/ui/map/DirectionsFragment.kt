@@ -45,6 +45,8 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
     private var originMarker: Marker? = null
     private var destMarker: Marker? = null
 
+    private var directionsJob: Job? = null
+
     // Trip mode (breadcrumb while moving)
     private var tripActive = false
     private var tripStartMillis = 0L
@@ -98,13 +100,12 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
 
         fusedClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        // Toggle mode → refetch route
+        // refetches route
         toggle.addOnButtonCheckedListener(
             MaterialButtonToggleGroup.OnButtonCheckedListener { _, _, _ ->
                 if (map != null) fetchAndRenderRoute()
             }
         )
-
         // Start/Stop (trip mode)
         btnStart.setOnClickListener {
             if (!tripActive) startTrip() else stopTrip()
@@ -117,7 +118,7 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
             uiSettings.isMapToolbarEnabled = true
         }
 
-        // Show Google’s blue dot if permission is granted
+        // Shows Google’s blue dot if permission is granted
         val fine = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         val coarse = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
         if (fine || coarse) {
@@ -127,9 +128,7 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
         fetchAndRenderRoute()
     }
 
-
     // --- Directions API ---
-
     private fun currentMode(): String {
         // map Driving/Walking buttons → directions mode
         return if (toggle.checkedButtonId == btnWalking.id) "walking" else "driving"
@@ -142,17 +141,19 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
     private fun fetchAndRenderRoute() {
         val m = map ?: return
 
-        // Clear previous
-        routePolyline?.remove(); routePolyline = null
-        originMarker?.remove(); destMarker?.remove()
+        // Canceling any previous directions requests
+        directionsJob?.cancel()
 
-        val dest   = LatLng(args.destLat.toDouble(),  args.destLng.toDouble())
+        routePolyline?.remove(); routePolyline = null
+        originMarker?.remove(); originMarker = null
+        destMarker?.remove(); destMarker = null
+
         var origin = LatLng(args.originLat.toDouble(), args.originLng.toDouble())
+        val dest   = LatLng(args.destLat.toDouble(), args.destLng.toDouble())
 
         if (origin.latitude == 0.0 && origin.longitude == 0.0) {
             origin = LatLng(43.6753, -79.4112)
         }
-
 
         originMarker = m.addMarker(
             MarkerOptions()
@@ -160,20 +161,30 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
                 .title("Origin")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
         )
-        destMarker = m.addMarker(MarkerOptions().position(dest).title("Destination"))
+        destMarker = m.addMarker(
+            MarkerOptions()
+                .position(dest)
+                .title("Destination")
+        )
 
-        // Fit both
-        val bounds = LatLngBounds.builder().include(origin).include(dest).build()
+        // Fits both markers while route loads
+        val bounds = LatLngBounds.builder()
+            .include(origin)
+            .include(dest)
+            .build()
         m.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
 
-        // Reset UI while loading
         tvEta.text = getString(R.string.eta_placeholder, "—")
         tvDistance.text = "—"
 
-        uiScope.launch {
+        directionsJob = uiScope.launch {
             val json = runCatching {
-                withContext(Dispatchers.IO) { fetchDirectionsJson(origin, dest, currentMode()) }
+                withContext(Dispatchers.IO) {
+                    fetchDirectionsJson(origin, dest, currentMode())
+                }
             }.getOrNull()
+
+            if (!isActive) return@launch
 
             if (json == null) {
                 toastShort("Directions request failed (null). Check API key / network.")
@@ -184,17 +195,27 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
             if (status != "OK") {
                 val msg = json.optString("error_message", status)
                 toastShort("Directions status: $status")
-                // Keep markers shown; leave ETA/distance as “—”
                 return@launch
             }
 
             val (points, distanceText, durationText) = parseDirections(json)
+
+            if (!isActive) return@launch
+
             tvEta.text = "ETA: $durationText"
             tvDistance.text = distanceText
 
             if (points.isNotEmpty()) {
-                routePolyline = m.addPolyline(PolylineOptions().addAll(points).width(12f))
-                val rb = LatLngBounds.builder().apply { points.forEach { include(it) } }.build()
+                routePolyline = m.addPolyline(
+                    PolylineOptions()
+                        .addAll(points)
+                        .width(12f)
+                )
+
+                val rb = LatLngBounds.builder().apply {
+                    points.forEach { include(it) }
+                }.build()
+
                 m.animateCamera(CameraUpdateFactory.newLatLngBounds(rb, 100))
             } else {
                 toastShort("No route points returned.")
@@ -203,11 +224,11 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
     }
 
 
+
     private fun fetchDirectionsJson(origin: LatLng, dest: LatLng, mode: String): JSONObject? {
         val key = requireContext().getString(R.string.directions_key).trim()
         val tag = "DirectionsDebug"
 
-        // Mask the key for logs/toast (don’t leak full key)
         fun mask(s: String) = if (s.length < 8) "(len=${s.length})" else s.take(4) + "…" + s.takeLast(4)
 
         if (key.isEmpty()) {
@@ -258,8 +279,6 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-
-
     private data class RouteParseResult(
         val points: List<LatLng>,
         val distanceText: String,
@@ -267,7 +286,6 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
     )
 
     private fun parseDirections(json: JSONObject): RouteParseResult {
-        // Expect: routes[0].overview_polyline.points, routes[0].legs[0].distance.text, duration.text
         val routes = json.optJSONArray("routes")
         if (routes == null || routes.length() == 0) {
             return RouteParseResult(emptyList(), "—", "—")
@@ -281,8 +299,6 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
         val decoded = decodePolyline(encoded)
         return RouteParseResult(decoded, distanceText, durationText)
     }
-
-    // --- Trip start/stop (breadcrumb + timer + my location) ---
 
     private fun startTrip() {
         if (ContextCompat.checkSelfPermission(
@@ -300,7 +316,6 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
 
         fusedClient?.requestLocationUpdates(locationRequest, locationCallback, requireActivity().mainLooper)
 
-        // Reuse tvEta to show elapsed for demo (you can add a dedicated label)
         tvEta.removeCallbacks(null)
         tvEta.post(object : Runnable {
             override fun run() {
@@ -316,13 +331,10 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
         tripActive = false
         btnStart.text = getString(R.string.start_)
         fusedClient?.removeLocationUpdates(locationCallback)
-        // keep breadcrumb polyline, or clear:
-        // breadcrumb?.remove(); breadcrumb = null
-        // Optionally, re-fetch static route after stopping:
         fetchAndRenderRoute()
     }
 
-    // --- Polyline decoder (Google encoded polyline algorithm) ---
+    // --- Polyline decoder ---
 
     private fun decodePolyline(encoded: String): List<LatLng> {
         if (encoded.isEmpty()) return emptyList()
