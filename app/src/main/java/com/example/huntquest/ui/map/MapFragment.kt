@@ -14,7 +14,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.huntquest.ActivityDetailsActivity
-import com.example.huntquest.MainActivity   // 👈 NEW
+import com.example.huntquest.MainActivity
 import com.example.huntquest.R
 import com.example.huntquest.data.Poi
 import com.example.huntquest.databinding.FragmentMapBinding
@@ -72,7 +72,9 @@ class MapFragment : Fragment(R.layout.fragment_map), OnMapReadyCallback {
 
         // FULLSCREEN BUTTON: hide bottom nav via MainActivity
         vb.btnFullscreen.setOnClickListener {
-            (requireActivity() as? MainActivity)?.setMapFullscreen(true)
+            val main = requireActivity() as? MainActivity ?: return@setOnClickListener
+            val newState = !main.isMapFullscreenNow()
+            main.setMapFullscreen(newState)
         }
 
         // Observe POIs from DB → draw markers when map is ready

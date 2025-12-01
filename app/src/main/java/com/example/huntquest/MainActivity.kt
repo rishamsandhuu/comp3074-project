@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
         bottomNav.visibility = if (fullscreen) View.GONE else View.VISIBLE
     }
 
+    fun isMapFullscreenNow(): Boolean = isMapFullscreen
+
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.Theme_HuntQuest)
         super.onCreate(savedInstanceState)

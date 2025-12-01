@@ -24,9 +24,11 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import kotlinx.coroutines.*
 import org.json.JSONObject
-import kotlin.math.abs
 import android.util.Log
 import android.widget.Toast
+import kotlin.math.abs
+
+private const val REQ_ORIGIN_LOCATION = 2000
 
 class DirectionsFragment : Fragment(), OnMapReadyCallback {
 
@@ -51,6 +53,10 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
     private var tripActive = false
     private var tripStartMillis = 0L
     private var breadcrumb: Polyline? = null
+
+    // Route duration for countdown
+    private var routeDurationSeconds = 0
+
     private var fusedClient: FusedLocationProviderClient? = null
     private val locationRequest by lazy {
         LocationRequest.Builder(2000L)
@@ -75,9 +81,14 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
     private val uiScope = MainScope()
     private val http = OkHttpClient()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         return inflater.inflate(R.layout.fragment_directions, container, false)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -100,13 +111,14 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
 
         fusedClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        // refetches route
+        // Refetch route when switching Driving/Walking
         toggle.addOnButtonCheckedListener(
             MaterialButtonToggleGroup.OnButtonCheckedListener { _, _, _ ->
                 if (map != null) fetchAndRenderRoute()
             }
         )
-        // Start/Stop (trip mode)
+
+        // Start / Stop trip
         btnStart.setOnClickListener {
             if (!tripActive) startTrip() else stopTrip()
         }
@@ -119,16 +131,26 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
         }
 
         // Shows Google’s blue dot if permission is granted
-        val fine = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-        val coarse = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        val fine = ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val coarse = ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
         if (fine || coarse) {
-            try { map?.isMyLocationEnabled = true } catch (_: SecurityException) {}
+            try {
+                map?.isMyLocationEnabled = true
+            } catch (_: SecurityException) {
+            }
         }
 
         fetchAndRenderRoute()
     }
 
-    // --- Directions API ---
+    // --- Helpers ---
+
     private fun currentMode(): String {
         // map Driving/Walking buttons → directions mode
         return if (toggle.checkedButtonId == btnWalking.id) "walking" else "driving"
@@ -137,23 +159,97 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
     private fun toastShort(msg: String) =
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
 
+    private fun hasLocationPermission(): Boolean {
+        val ctx = requireContext()
+        val fine = ContextCompat.checkSelfPermission(
+            ctx,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val coarse = ContextCompat.checkSelfPermission(
+            ctx,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        return fine || coarse
+    }
+
+    // --- Route fetching / drawing ---
+
 
     private fun fetchAndRenderRoute() {
+        val dest = LatLng(args.destLat.toDouble(), args.destLng.toDouble())
+
+        // If origin was explicitly provided (from MapFragment), use it directly
+        val hasExplicitOrigin =
+            args.originLat.toDouble() != 0.0 || args.originLng.toDouble() != 0.0
+
+        if (hasExplicitOrigin) {
+            val origin = LatLng(args.originLat.toDouble(), args.originLng.toDouble())
+            drawRoute(origin, dest)
+            return
+        }
+
+        // Otherwise we want current device location
+        if (!hasLocationPermission()) {
+            // This SHOULD trigger the Android "allow location" dialog
+            requestPermissions(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                REQ_ORIGIN_LOCATION
+            )
+            return
+        }
+
+        // We already have permission → ask FusedLocation for a *fresh* fix first
+        try {
+            fusedClient?.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                ?.addOnSuccessListener { loc ->
+                    if (loc != null) {
+                        val origin = LatLng(loc.latitude, loc.longitude)
+                        drawRoute(origin, dest)
+                    } else {
+                        // If getCurrentLocation returns null, fall back to lastLocation
+                        fusedClient?.lastLocation
+                            ?.addOnSuccessListener { last ->
+                                val origin = if (last != null) {
+                                    LatLng(last.latitude, last.longitude)
+                                } else {
+                                    // Absolute last resort: Toronto centre
+                                    LatLng(43.6532, -79.3832)
+                                }
+                                drawRoute(origin, dest)
+                            }
+                            ?.addOnFailureListener {
+                                val origin = LatLng(43.6532, -79.3832)
+                                drawRoute(origin, dest)
+                            }
+                    }
+                }
+                ?.addOnFailureListener {
+                    // getCurrentLocation failed → fall back to Toronto
+                    val origin = LatLng(43.6532, -79.3832)
+                    drawRoute(origin, dest)
+                }
+        } catch (se: SecurityException) {
+            // If somehow called without permission, don’t crash – just use fallback
+            val origin = LatLng(43.6532, -79.3832)
+            drawRoute(origin, dest)
+        }
+    }
+
+
+
+    private fun drawRoute(origin: LatLng, dest: LatLng) {
         val m = map ?: return
 
-        // Canceling any previous directions requests
+        // Cancel any previous directions request
         directionsJob?.cancel()
 
+        // Clear overlays
         routePolyline?.remove(); routePolyline = null
         originMarker?.remove(); originMarker = null
         destMarker?.remove(); destMarker = null
-
-        var origin = LatLng(args.originLat.toDouble(), args.originLng.toDouble())
-        val dest   = LatLng(args.destLat.toDouble(), args.destLng.toDouble())
-
-        if (origin.latitude == 0.0 && origin.longitude == 0.0) {
-            origin = LatLng(43.6753, -79.4112)
-        }
 
         originMarker = m.addMarker(
             MarkerOptions()
@@ -167,13 +263,14 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
                 .title("Destination")
         )
 
-        // Fits both markers while route loads
+        // Fit both markers while route loads
         val bounds = LatLngBounds.builder()
             .include(origin)
             .include(dest)
             .build()
         m.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100))
 
+        // Reset ETA / distance while loading
         tvEta.text = getString(R.string.eta_placeholder, "—")
         tvDistance.text = "—"
 
@@ -198,11 +295,12 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
                 return@launch
             }
 
-            val (points, distanceText, durationText) = parseDirections(json)
+            val (points, distanceText, durationText, durationSeconds) = parseDirections(json)
+            routeDurationSeconds = durationSeconds
 
             if (!isActive) return@launch
 
-            tvEta.text = "ETA: $durationText"
+            tvEta.text = "Eta: $durationText"     // initial display before starting trip
             tvDistance.text = distanceText
 
             if (points.isNotEmpty()) {
@@ -223,13 +321,12 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
-
-
     private fun fetchDirectionsJson(origin: LatLng, dest: LatLng, mode: String): JSONObject? {
         val key = requireContext().getString(R.string.directions_key).trim()
         val tag = "DirectionsDebug"
 
-        fun mask(s: String) = if (s.length < 8) "(len=${s.length})" else s.take(4) + "…" + s.takeLast(4)
+        fun mask(s: String) =
+            if (s.length < 8) "(len=${s.length})" else s.take(4) + "…" + s.takeLast(4)
 
         if (key.isEmpty()) {
             Log.e(tag, "Missing key! directions_key is empty")
@@ -282,23 +379,35 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
     private data class RouteParseResult(
         val points: List<LatLng>,
         val distanceText: String,
-        val durationText: String
+        val durationText: String,
+        val durationSeconds: Int
     )
 
     private fun parseDirections(json: JSONObject): RouteParseResult {
         val routes = json.optJSONArray("routes")
         if (routes == null || routes.length() == 0) {
-            return RouteParseResult(emptyList(), "—", "—")
+            return RouteParseResult(emptyList(), "—", "—", 0)
         }
+
         val first = routes.getJSONObject(0)
         val legs = first.optJSONArray("legs")
         val leg0 = if (legs != null && legs.length() > 0) legs.getJSONObject(0) else null
-        val distanceText = leg0?.optJSONObject("distance")?.optString("text") ?: "—"
-        val durationText = leg0?.optJSONObject("duration")?.optString("text") ?: "—"
+
+        val distanceText = leg0
+            ?.optJSONObject("distance")
+            ?.optString("text") ?: "—"
+
+        val durationObj = leg0?.optJSONObject("duration")
+        val durationText = durationObj?.optString("text") ?: "—"
+        val durationSeconds = durationObj?.optInt("value", 0) ?: 0
+
         val encoded = first.optJSONObject("overview_polyline")?.optString("points") ?: ""
         val decoded = decodePolyline(encoded)
-        return RouteParseResult(decoded, distanceText, durationText)
+
+        return RouteParseResult(decoded, distanceText, durationText, durationSeconds)
     }
+
+    // --- Trip start/stop ---
 
     private fun startTrip() {
         if (ContextCompat.checkSelfPermission(
@@ -309,19 +418,45 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
             requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 2001)
             return
         }
+
         tripActive = true
         tripStartMillis = System.currentTimeMillis()
         btnStart.text = getString(R.string.stop_)
         map?.isMyLocationEnabled = true
 
-        fusedClient?.requestLocationUpdates(locationRequest, locationCallback, requireActivity().mainLooper)
+        // Start live location breadcrumb
+        fusedClient?.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            requireActivity().mainLooper
+        )
 
+        // Countdown from routeDurationSeconds
         tvEta.removeCallbacks(null)
         tvEta.post(object : Runnable {
             override fun run() {
                 if (!tripActive) return
-                val mins = (System.currentTimeMillis() - tripStartMillis) / 60000.0
-                tvEta.text = String.format("Trip time: %.1f min", mins)
+
+                if (routeDurationSeconds <= 0) {
+                    // If no ETA from API → show elapsed time
+                    val mins = (System.currentTimeMillis() - tripStartMillis) / 60000.0
+                    tvEta.text = String.format("Trip time: %.1f min", mins)
+                    tvEta.postDelayed(this, 1000L)
+                    return
+                }
+
+                val elapsedSec =
+                    ((System.currentTimeMillis() - tripStartMillis) / 1000L).toInt()
+                val remainingSec = routeDurationSeconds - elapsedSec
+
+                if (remainingSec <= 0) {
+                    tvEta.text = "Eta: 0.0 min"
+                    stopTrip()
+                    return
+                }
+
+                val remainingMin = remainingSec / 60.0
+                tvEta.text = String.format("Eta: %.1f min", remainingMin)
                 tvEta.postDelayed(this, 1000L)
             }
         })
@@ -373,10 +508,30 @@ class DirectionsFragment : Fragment(), OnMapReadyCallback {
         return poly
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == REQ_ORIGIN_LOCATION) {
+            val granted = grantResults.any { it == PackageManager.PERMISSION_GRANTED }
+            if (granted) {
+                // Now that we have permission, build route from real location
+                fetchAndRenderRoute()
+            } else {
+                toastShort("Location permission denied, using default start point.")
+                val dest = LatLng(args.destLat.toDouble(), args.destLng.toDouble())
+                val defaultOrigin = LatLng(43.6532, -79.3832)
+                drawRoute(defaultOrigin, dest)
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         uiScope.cancel()
         fusedClient?.removeLocationUpdates(locationCallback)
     }
-
 }
